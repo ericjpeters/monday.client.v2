@@ -2,18 +2,18 @@
 
 namespace Monday.Client.Options
 {
-    public interface IBoardOptions : IOptionsBuilder
+    public interface IBoardOptions : IBaseOptions
     {
         bool IncludeState { get; set; }
         bool IncludeBoardFolderId { get; set; }
     }
     
-    public class BoardOptions : OptionsBuilder, IBoardOptions
+    public class BoardOptions : BaseOptions, IBoardOptions
     {
         public bool IncludeState { get; set; } = false;
         public bool IncludeBoardFolderId { get; set; } = false;
 
-        public override string Build(OptionBuilderMode Mode)
+        internal override string Build(OptionBuilderMode Mode)
         {
             if (!Include)
                 return String.Empty;

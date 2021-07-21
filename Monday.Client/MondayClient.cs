@@ -20,6 +20,8 @@ namespace Monday.Client
     /// </summary>
     public class MondayClient
     {
+        private readonly OptionsBuilder _optionsBuilder;
+
         /// <summary>
         ///     Creates client for accessing Monday's endpoints.
         /// </summary>
@@ -28,6 +30,7 @@ namespace Monday.Client
         {
             _graphQlHttpClient = new GraphQLHttpClient("https://api.monday.com/v2/", new NewtonsoftJsonSerializer());
             _graphQlHttpClient.HttpClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(apiKey);
+            _optionsBuilder = new OptionsBuilder();
         }
 
         private GraphQLHttpClient _graphQlHttpClient { get; }
@@ -196,10 +199,10 @@ namespace Monday.Client
 query request($id:Int) {{ 
     boards(ids:[$id]) {{ 
         items(limit: {req.Limit}) {{ 
-            {req.ItemOptions.Build(Mode: OptionBuilderMode.Raw)}
-            {req.BoardOptions.Build()}
-            {req.GroupOptions.Build()}
-            {req.ColumnValuesOptions.Build()}
+            {_optionsBuilder.Build(req.ItemOptions, Mode: OptionBuilderMode.Raw)}
+            {_optionsBuilder.Build(req.BoardOptions)}
+            {_optionsBuilder.Build(req.GroupOptions)}
+            {_optionsBuilder.Build(req.ColumnValuesOptions)}
         }} 
     }} 
 }}";
@@ -237,12 +240,12 @@ query request($id:Int) {{
                 Query = $@"
 query request($id:Int) {{ 
     items(ids: [$id]) {{ 
-        {req.ItemOptions.Build(Mode: OptionBuilderMode.Raw)}
-        {req.BoardOptions.Build()}
-        {req.GroupOptions.Build()}
-        {req.ColumnValuesOptions.Build()}
-        {req.SubscribersOptions.Build()}
-        {req.UpdatesOptions.Build()}
+        {_optionsBuilder.Build(req.ItemOptions, Mode: OptionBuilderMode.Raw)}
+        {_optionsBuilder.Build(req.BoardOptions)}
+        {_optionsBuilder.Build(req.GroupOptions)}
+        {_optionsBuilder.Build(req.ColumnValuesOptions)}
+        {_optionsBuilder.Build(req.SubscribersOptions)}
+        {_optionsBuilder.Build(req.UpdatesOptions)}
     }} 
 }}",
                 Variables = new

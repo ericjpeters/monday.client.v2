@@ -2,16 +2,16 @@
 
 namespace Monday.Client.Options
 {
-    public interface IGroupOptions : IOptionsBuilder
+    public interface IGroupOptions : IBaseOptions
     {
         bool IncludeColor { get; set; }
     }
     
-    public class GroupOptions : OptionsBuilder, IGroupOptions
+    public class GroupOptions : BaseOptions, IGroupOptions
     {
         public bool IncludeColor { get; set; } = false;
 
-        public override string Build(OptionBuilderMode Mode)
+        internal override string Build(OptionBuilderMode Mode)
         {
             if (!Include)
                 return String.Empty;

@@ -2,16 +2,16 @@
 
 namespace Monday.Client.Options
 {
-    public interface IUpdatesOptions : IOptionsBuilder
+    public interface IUpdatesOptions : IBaseOptions
     {
         int Limit { get; set; }
     }
 
-    public class UpdatesOptions : OptionsBuilder, IUpdatesOptions
+    public class UpdatesOptions : BaseOptions, IUpdatesOptions
     {
         public int Limit { get; set; } = 100000;
 
-        public override string Build(OptionBuilderMode Mode)
+        internal override string Build(OptionBuilderMode Mode)
         {
             if (!Include)
                 return String.Empty;

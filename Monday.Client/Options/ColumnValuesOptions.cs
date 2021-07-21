@@ -2,20 +2,20 @@
 
 namespace Monday.Client.Options
 {
-    public interface IColumnValuesOptions : IOptionsBuilder
+    public interface IColumnValuesOptions : IBaseOptions
     {
         bool IncludeValue { get; set; }
         bool IncludeType { get; set; }
         bool IncludeAdditionalInfo { get; set; }
     }
 
-    public class ColumnValuesOptions : OptionsBuilder, IColumnValuesOptions
+    public class ColumnValuesOptions : BaseOptions, IColumnValuesOptions
     {
         public bool IncludeValue { get; set; } = true;
         public bool IncludeType { get; set; } = true;
         public bool IncludeAdditionalInfo { get; set; } = true;
 
-        public override string Build(OptionBuilderMode Mode)
+        internal override string Build(OptionBuilderMode Mode)
         {
             if (!Include)
                 return String.Empty;

@@ -1,6 +1,6 @@
 ﻿namespace Monday.Client.Options
 {
-    public enum OptionBuilderMode
+    internal enum OptionBuilderMode
     {
         Single,
         Raw

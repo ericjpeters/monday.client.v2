@@ -2,13 +2,13 @@
 
 namespace Monday.Client.Options
 {
-    public interface IItemOptions : IOptionsBuilder
+    public interface IItemOptions : IBaseOptions
     {
     }
 
-    public class ItemOptions : OptionsBuilder, IItemOptions
+    public class ItemOptions : BaseOptions, IItemOptions
     {
-        public override string Build(OptionBuilderMode Mode)
+        internal override string Build(OptionBuilderMode Mode)
         {
             if (!Include)
                 return String.Empty;
