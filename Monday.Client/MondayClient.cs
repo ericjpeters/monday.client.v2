@@ -9,6 +9,7 @@ using GraphQL.Client.Serializer.Newtonsoft;
 using Monday.Client.Extensions;
 using Monday.Client.Models;
 using Monday.Client.Mutations;
+using Monday.Client.Options;
 using Monday.Client.Requests;
 using Monday.Client.Responses;
 
