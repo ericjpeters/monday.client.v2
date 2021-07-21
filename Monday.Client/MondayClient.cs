@@ -9,6 +9,7 @@ using GraphQL.Client.Serializer.Newtonsoft;
 using Monday.Client.Extensions;
 using Monday.Client.Models;
 using Monday.Client.Mutations;
+using Monday.Client.Requests;
 using Monday.Client.Responses;
 
 namespace Monday.Client
@@ -185,12 +186,28 @@ namespace Monday.Client
         /// <returns></returns>
         public async Task<List<Item>> GetItems(int boardId)
         {
+            return await GetItems(new GetItemsRequest(boardId));
+        }
+
+        public async Task<List<Item>> GetItems(IGetItemsRequest req)
+        {
+            var query = $@"
+query request($id:Int) {{ 
+    boards(ids:[$id]) {{ 
+        items(limit: {req.Limit}) {{ 
+            {req.ItemOptions.Build(Mode: OptionBuilderMode.Raw)}
+            {req.BoardOptions.Build()}
+            {req.GroupOptions.Build()}
+        }} 
+    }} 
+}}";
+
             var request = new GraphQLRequest
             {
-                Query = @"query request($id:Int) { boards(ids:[$id]) { items(limit: 100000) { id name board { id name description board_kind } group { id title archived deleted } creator_id created_at updated_at creator { id name email } } } } ",
+                Query = query,
                 Variables = new
                 {
-                    id = boardId
+                    id = req.BoardId
                 }
             };
 
@@ -208,12 +225,48 @@ namespace Monday.Client
         /// <returns></returns>
         public async Task<Item> GetItem(int itemId)
         {
+            return await GetItem(new GetItemRequest(itemId));
+        }
+
+        public async Task<Item> GetItem(IGetItemRequest req)
+        {
             var request = new GraphQLRequest
             {
-                Query = @"query request($id:Int) { items(ids: [$id]) { id name board { id name description board_kind state board_folder_id } group { id title color archived deleted } column_values { id text title type value additional_info } subscribers { id name email } updates(limit: 100000) { id body text_body replies { id body text_body creator_id creator { id name email } created_at updated_at } creator_id creator { id name email } created_at updated_at } creator_id created_at updated_at creator { id name email } } } ",
+                Query = $@"
+query request($id:Int) {{ 
+    items(ids: [$id]) {{ 
+        id name board {{ 
+            id name description board_kind state board_folder_id 
+        }} 
+        group {{ 
+            id title color archived deleted 
+        }} 
+        column_values {{ 
+            id text title type value additional_info 
+        }} 
+        subscribers {{ 
+            id name email 
+        }} 
+        updates(limit: 100000) {{ 
+            id body text_body replies {{
+                id body text_body creator_id creator {{ 
+                    id name email 
+                }} 
+                created_at updated_at 
+            }} 
+            creator_id creator {{ 
+                id name email 
+            }} 
+            created_at updated_at 
+        }} 
+        creator_id created_at updated_at creator {{ 
+            id name email 
+        }} 
+    }} 
+}}",
                 Variables = new
                 {
-                    id = itemId
+                    id = req.ItemId
                 }
             };
 
