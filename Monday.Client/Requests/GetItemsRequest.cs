@@ -10,6 +10,7 @@ namespace Monday.Client.Requests
         IBoardOptions BoardOptions { get; set; }
         IGroupOptions GroupOptions { get; set; }
         IItemOptions ItemOptions { get; set; }
+        IColumnValuesOptions ColumnValuesOptions { get; set; } 
     }
 
     public class GetItemsRequest : IGetItemsRequest
@@ -20,6 +21,7 @@ namespace Monday.Client.Requests
         public IBoardOptions BoardOptions { get; set; } = new BoardOptions();
         public IGroupOptions GroupOptions { get; set; } = new GroupOptions();
         public IItemOptions ItemOptions { get; set; } = new ItemOptions();
+        public IColumnValuesOptions ColumnValuesOptions { get; set; } = new ColumnValuesOptions { Include = false };
 
         public GetItemsRequest(int boardId)
         {

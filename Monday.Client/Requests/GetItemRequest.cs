@@ -6,6 +6,7 @@ namespace Monday.Client.Requests
     {
         int ItemId { get; set; }
 
+        IItemOptions ItemOptions { get; set; }
         IBoardOptions BoardOptions { get; set; }
         IGroupOptions GroupOptions { get; set; }
         IColumnValuesOptions ColumnValuesOptions { get; set; }
@@ -16,6 +17,7 @@ namespace Monday.Client.Requests
     public class GetItemRequest : IGetItemRequest
     {
         public int ItemId { get; set; }
+        public IItemOptions ItemOptions { get; set; } = new ItemOptions();
         public IBoardOptions BoardOptions { get; set; } = new BoardOptions
         {
             IncludeState = true,

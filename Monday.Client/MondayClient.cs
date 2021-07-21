@@ -199,6 +199,7 @@ query request($id:Int) {{
             {req.ItemOptions.Build(Mode: OptionBuilderMode.Raw)}
             {req.BoardOptions.Build()}
             {req.GroupOptions.Build()}
+            {req.ColumnValuesOptions.Build()}
         }} 
     }} 
 }}";
@@ -236,33 +237,12 @@ query request($id:Int) {{
                 Query = $@"
 query request($id:Int) {{ 
     items(ids: [$id]) {{ 
-        id name board {{ 
-            id name description board_kind state board_folder_id 
-        }} 
-        group {{ 
-            id title color archived deleted 
-        }} 
-        column_values {{ 
-            id text title type value additional_info 
-        }} 
-        subscribers {{ 
-            id name email 
-        }} 
-        updates(limit: 100000) {{ 
-            id body text_body replies {{
-                id body text_body creator_id creator {{ 
-                    id name email 
-                }} 
-                created_at updated_at 
-            }} 
-            creator_id creator {{ 
-                id name email 
-            }} 
-            created_at updated_at 
-        }} 
-        creator_id created_at updated_at creator {{ 
-            id name email 
-        }} 
+        {req.ItemOptions.Build(Mode: OptionBuilderMode.Raw)}
+        {req.BoardOptions.Build()}
+        {req.GroupOptions.Build()}
+        {req.ColumnValuesOptions.Build()}
+        {req.SubscribersOptions.Build()}
+        {req.UpdatesOptions.Build()}
     }} 
 }}",
                 Variables = new
