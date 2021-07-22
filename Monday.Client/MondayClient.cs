@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using GraphQL;
+using GraphQL.Client.Abstractions;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
 using Monday.Client.Extensions;
@@ -26,14 +27,20 @@ namespace Monday.Client
         ///     Creates client for accessing Monday's endpoints.
         /// </summary>
         /// <param name="apiKey">The version 2 key.</param>
-        public MondayClient(string apiKey)
+        public MondayClient(string apiKey, IGraphQLClient client = null)
         {
-            _graphQlHttpClient = new GraphQLHttpClient("https://api.monday.com/v2/", new NewtonsoftJsonSerializer());
-            _graphQlHttpClient.HttpClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(apiKey);
+            _graphQlHttpClient = client;
+            if (client == null)
+            {
+                var graphQlHttpClient = new GraphQLHttpClient("https://api.monday.com/v2/", new NewtonsoftJsonSerializer());
+                graphQlHttpClient.HttpClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(apiKey);
+                _graphQlHttpClient = graphQlHttpClient;
+            }
+
             _optionsBuilder = new OptionsBuilder();
         }
 
-        private GraphQLHttpClient _graphQlHttpClient { get; }
+        private IGraphQLClient _graphQlHttpClient { get; }
 
         /// <summary>
         ///     Helper method for throwing all errors reported from the response.
