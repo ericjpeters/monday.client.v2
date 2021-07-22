@@ -60,6 +60,10 @@ namespace Monday.Client.Tests
 
         private void DumbCheckQueryEquivalence(string query1, string query2)
         {
+            // I need to find a graphql query parser or comparitor.  until then,
+            // this is a fair approximately-equal check, but does nothing to
+            // check for validity of the generated graphql query.  (spaces could
+            // be missing between field names, etc.)
             var q1 = Regex.Replace(query1, @"\s+", String.Empty).ToCharArray().ToList();
             q1.Sort();
             var q2 = Regex.Replace(query2, @"\s+", String.Empty).ToCharArray().ToList();
