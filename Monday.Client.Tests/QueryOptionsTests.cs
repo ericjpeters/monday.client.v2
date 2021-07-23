@@ -26,6 +26,9 @@ namespace Monday.Client.Tests
         public void SetupClient()
         {
             _graphQlClient = A.Fake<IGraphQLClient>();
+            _mondayClient = A.Fake<MondayClient>(_ => _.WithArgumentsForConstructor(new object[] { _graphQlClient }));
+
+            // setup fake graphql client responses:
             A.CallTo(() => _graphQlClient.SendQueryAsync<GetBoardItemsResponse>(A<GraphQLRequest>.Ignored, A<CancellationToken>.Ignored))
                 .ReturnsLazily(async (_) =>
                 {
@@ -33,13 +36,14 @@ namespace Monday.Client.Tests
                     return await Task.FromResult(new GraphQLResponse<GetBoardItemsResponse>()
                     {
                         Data = new GetBoardItemsResponse
-                        { 
+                        {
                             Boards = new List<GetBoardItemsResponse.Board> {
                                 new GetBoardItemsResponse.Board()
                             }
                         }
                     });
                 });
+
             A.CallTo(() => _graphQlClient.SendQueryAsync<GetItemsResponse>(A<GraphQLRequest>.Ignored, A<CancellationToken>.Ignored))
                 .ReturnsLazily(async (_) =>
                 {
@@ -48,14 +52,102 @@ namespace Monday.Client.Tests
                     {
                         Data = new GetItemsResponse
                         {
-                            Items = new List<Item> { 
+                            Items = new List<Item> {
                                 new Item()
                             }
                         }
                     });
                 });
 
-            _mondayClient = A.Fake<MondayClient>(_ => _.WithArgumentsForConstructor(new object[] { _graphQlClient }));
+            A.CallTo(() => _graphQlClient.SendQueryAsync<GetUsersResponse>(A<GraphQLRequest>.Ignored, A<CancellationToken>.Ignored))
+                .ReturnsLazily(async (_) =>
+                {
+                    _latestGraphQlRequest = _.Arguments[0] as GraphQLRequest;
+                    return await Task.FromResult(new GraphQLResponse<GetUsersResponse>()
+                    {
+                        Data = new GetUsersResponse
+                        {
+                            Users = new List<User> {
+                              new User()
+                            }
+                        }
+                    });
+                });
+
+            A.CallTo(() => _graphQlClient.SendQueryAsync<GetBoardsResponse>(A<GraphQLRequest>.Ignored, A<CancellationToken>.Ignored))
+                .ReturnsLazily(async (_) =>
+                {
+                    _latestGraphQlRequest = _.Arguments[0] as GraphQLRequest;
+                    return await Task.FromResult(new GraphQLResponse<GetBoardsResponse>()
+                    {
+                        Data = new GetBoardsResponse
+                        {
+                            Boards = new List<Board> {
+                                new Board()
+                            }
+                        }
+                    });
+                });
+
+            A.CallTo(() => _graphQlClient.SendMutationAsync<GetGroupsResponse>(A<GraphQLRequest>.Ignored, A<CancellationToken>.Ignored))
+                .ReturnsLazily(async (_) =>
+                {
+                    _latestGraphQlRequest = _.Arguments[0] as GraphQLRequest;
+                    return await Task.FromResult(new GraphQLResponse<GetGroupsResponse>()
+                    {
+                        Data = new GetGroupsResponse
+                        {
+                            Boards = new List<GetGroupsResponse.Board> {
+                                new GetGroupsResponse.Board()
+                            }
+                        }
+                    });
+                });
+
+            A.CallTo(() => _graphQlClient.SendMutationAsync<GetBoardTagsResponse>(A<GraphQLRequest>.Ignored, A<CancellationToken>.Ignored))
+                .ReturnsLazily(async (_) =>
+                {
+                    _latestGraphQlRequest = _.Arguments[0] as GraphQLRequest;
+                    return await Task.FromResult(new GraphQLResponse<GetBoardTagsResponse>()
+                    {
+                        Data = new GetBoardTagsResponse
+                        {
+                            Boards = new List<GetBoardTagsResponse.Board> {
+                                new GetBoardTagsResponse.Board()
+                            }
+                        }
+                    });
+                });
+
+            A.CallTo(() => _graphQlClient.SendMutationAsync<GetTagsResponse>(A<GraphQLRequest>.Ignored, A<CancellationToken>.Ignored))
+                .ReturnsLazily(async (_) =>
+                {
+                    _latestGraphQlRequest = _.Arguments[0] as GraphQLRequest;
+                    return await Task.FromResult(new GraphQLResponse<GetTagsResponse>()
+                    {
+                        Data = new GetTagsResponse
+                        {
+                            Tags = new List<Tag> {
+                                new Tag()
+                            }
+                        }
+                    });
+                });
+
+            A.CallTo(() => _graphQlClient.SendMutationAsync<GetTeamsResponse>(A<GraphQLRequest>.Ignored, A<CancellationToken>.Ignored))
+                .ReturnsLazily(async (_) =>
+                {
+                    _latestGraphQlRequest = _.Arguments[0] as GraphQLRequest;
+                    return await Task.FromResult(new GraphQLResponse<GetTeamsResponse>()
+                    {
+                        Data = new GetTeamsResponse
+                        {
+                            Teams = new List<Team> {
+                                new Team()
+                            }
+                        }
+                    });
+                });
         }
 
         private void DumbCheckQueryEquivalence(string query1, string query2)
@@ -88,6 +180,96 @@ namespace Monday.Client.Tests
 
             DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
                 "query request($id:Int) { boards(ids:[$id]) { items(limit: 100000) { id name board { id name description board_kind } group { id title archived deleted } creator_id created_at updated_at creator { id name email } } } } ");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetUsersWithNewQueryOptionsDefaultsToSameAsOriginalQuery()
+        {
+            await _mondayClient.GetUsers();
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query { users { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at }}");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetUsersByAccessTypeWithNewQueryOptionsDefaultsToSameAsOriginalQuery()
+        {
+            await _mondayClient.GetUsers(UserAccessTypes.All);
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query request($userKind:UserKind) { users(kind:$userKind) { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at }}");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetUserWithNewQueryOptionsDefaultsToSameAsOriginalQuery()
+        {
+            await _mondayClient.GetUser(1234);
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query request($id:Int) { users(ids:[$id]) { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at }}");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetBoardsWithNewQueryOptionsDefaultsToSameAsOriginalQuery()
+        {
+            await _mondayClient.GetBoards();
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query { boards(limit: 100000) { id name description board_kind state board_folder_id permissions owner { id name email }}}");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetBoardWithNewQueryOptionsDefaultsToSameAsOriginalQuery()
+        {
+            await _mondayClient.GetBoard(1234);
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query request($id:Int) { boards(ids:[$id]) { id name description board_kind state board_folder_id permissions owner { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } columns { id, title, type, archived settings_str } } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetGroupsWithNewQueryOptionsDefaultsToSameAsOriginalQuery()
+        {
+            await _mondayClient.GetGroups(1234);
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query request($id:Int!) { boards(ids: [$id]) { groups { id title color archived deleted }}}");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetTagsWithNewQueryOptionsDefaultsToSameAsOriginalQuery()
+        {
+            await _mondayClient.GetTags(1234);
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query request($id:Int!) { boards(ids: [$id]) { tags { id name color } } } ");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetTagWithNewQueryOptionsDefaultsToSameAsOriginalQuery()
+        {
+            await _mondayClient.GetTag(1234);
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query request($id:Int!) { tags(ids: [$id]) { id name color } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetTeamsWithNewQueryOptionsDefaultsToSameAsOriginalQuery()
+        {
+            await _mondayClient.GetTeams();
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query request { teams { id name picture_url users { id name email } } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetTeamWithNewQueryOptionsDefaultsToSameAsOriginalQuery()
+        {
+            await _mondayClient.GetTeam(1234);
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query request($id:Int!) { teams(ids: [$id]) { id name picture_url users { id name email } } }");
         }
     }
 }
