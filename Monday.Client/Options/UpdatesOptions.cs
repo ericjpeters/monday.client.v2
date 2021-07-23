@@ -11,7 +11,7 @@ namespace Monday.Client.Options
     {
         public int Limit { get; set; } = 100000;
 
-        internal override string Build(OptionBuilderMode Mode)
+        internal override string Build(OptionBuilderMode mode)
         {
             if (!Include)
                 return String.Empty;

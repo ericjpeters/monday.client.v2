@@ -6,14 +6,16 @@ namespace Monday.Client.Options
     {
         bool IncludeState { get; set; }
         bool IncludeBoardFolderId { get; set; }
+        bool IncludePermissions { get; set; }
     }
     
     public class BoardOptions : BaseOptions, IBoardOptions
     {
         public bool IncludeState { get; set; } = false;
         public bool IncludeBoardFolderId { get; set; } = false;
+        public bool IncludePermissions { get; set; } = false;
 
-        internal override string Build(OptionBuilderMode Mode)
+        internal override string Build(OptionBuilderMode mode)
         {
             if (!Include)
                 return String.Empty;
@@ -26,7 +28,23 @@ namespace Monday.Client.Options
             if (IncludeBoardFolderId)
                 boardFolderId = "board_folder_id";
 
-            return $@"board {{ id name description board_kind {state} {boardFolderId} }}";
+            var permissions = String.Empty;
+            if (IncludePermissions)
+                permissions = "permissions";
+
+            var result = $"id name description board_kind {state} {boardFolderId} {permissions}";
+
+            switch (mode)
+            {
+                case OptionBuilderMode.Raw:
+                    return result;
+
+                case OptionBuilderMode.Multiple:
+                    return $@"boards {{ {result} }}";
+
+                default:
+                    return $@"board {{ {result} }}";
+            }
         }
     }
 }

@@ -161,12 +161,24 @@ namespace Monday.Client
         /// <returns></returns>
         public async Task<Board> GetBoard(int boardId)
         {
+            return await GetBoard(new GetBoardRequest(boardId));
+        }
+
+        public async Task<Board> GetBoard(IGetBoardRequest req)
+        {
             var request = new GraphQLRequest
             {
-                Query = @"query request($id:Int) { boards(ids:[$id]) { id name description board_kind state board_folder_id permissions owner { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } columns { id, title, type, archived settings_str } } }",
+                Query = $@"
+query request($id:Int) {{ 
+    boards(ids:[$id]) {{ 
+        {_optionsBuilder.Build(req.BoardOptions, mode: OptionBuilderMode.Raw)}
+        {_optionsBuilder.Build(req.OwnerOptions)}
+        {_optionsBuilder.Build(req.ColumnOptions, OptionBuilderMode.Multiple)}
+    }} 
+}}",
                 Variables = new
                 {
-                    id = boardId
+                    id = req.BoardId
                 }
             };
 
@@ -226,7 +238,7 @@ query request($id:Int!) {{
 query request($id:Int) {{ 
     boards(ids:[$id]) {{ 
         items(limit: {req.Limit}) {{ 
-            {_optionsBuilder.Build(req.ItemOptions, Mode: OptionBuilderMode.Raw)}
+            {_optionsBuilder.Build(req.ItemOptions, mode: OptionBuilderMode.Raw)}
             {_optionsBuilder.Build(req.BoardOptions)}
             {_optionsBuilder.Build(req.GroupOptions)}
             {_optionsBuilder.Build(req.ColumnValuesOptions)}
@@ -267,7 +279,7 @@ query request($id:Int) {{
                 Query = $@"
 query request($id:Int) {{ 
     items(ids: [$id]) {{ 
-        {_optionsBuilder.Build(req.ItemOptions, Mode: OptionBuilderMode.Raw)}
+        {_optionsBuilder.Build(req.ItemOptions, mode: OptionBuilderMode.Raw)}
         {_optionsBuilder.Build(req.BoardOptions)}
         {_optionsBuilder.Build(req.GroupOptions)}
         {_optionsBuilder.Build(req.ColumnValuesOptions)}

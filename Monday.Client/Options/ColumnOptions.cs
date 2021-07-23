@@ -2,22 +2,18 @@
 
 namespace Monday.Client.Options
 {
-    public interface IItemOptions : IBaseOptions
+    public interface IColumnOptions : IBaseOptions
     {
     }
-
-    public class ItemOptions : BaseOptions, IItemOptions
+    
+    public class ColumnOptions : BaseOptions, IColumnOptions
     {
         internal override string Build(OptionBuilderMode mode)
         {
             if (!Include)
                 return String.Empty;
 
-            var metadata = String.Empty;
-            if (IncludeMetadata)
-                metadata = $@"creator_id created_at updated_at creator {{ id name email }}";
-
-            var result = $@"id name {metadata}";
+            var result = $"id, title, type, archived settings_str";
 
             switch (mode)
             {
@@ -25,10 +21,10 @@ namespace Monday.Client.Options
                     return result;
 
                 case OptionBuilderMode.Multiple:
-                    return $@"items {{ {result} }}";
+                    return $@"columns {{ {result} }}";
 
                 default:
-                    return $@"item {{ {result} }}";
+                    return $@"column {{ {result} }}";
             }
         }
     }

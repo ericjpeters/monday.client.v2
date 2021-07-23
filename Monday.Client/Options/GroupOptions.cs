@@ -11,7 +11,7 @@ namespace Monday.Client.Options
     {
         public bool IncludeColor { get; set; } = false;
 
-        internal override string Build(OptionBuilderMode Mode)
+        internal override string Build(OptionBuilderMode mode)
         {
             if (!Include)
                 return String.Empty;
@@ -26,7 +26,7 @@ namespace Monday.Client.Options
 
             var result = $"id title {color} {metadata}";
 
-            switch (Mode)
+            switch (mode)
             {
                 case OptionBuilderMode.Raw:
                     return result;

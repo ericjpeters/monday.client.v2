@@ -8,7 +8,7 @@ namespace Monday.Client.Options
 
     public class SubscribersOptions : BaseOptions, ISubscribersOptions
     {
-        internal override string Build(OptionBuilderMode Mode)
+        internal override string Build(OptionBuilderMode mode)
         {
             if (!Include)
                 return String.Empty;

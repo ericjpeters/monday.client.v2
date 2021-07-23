@@ -13,7 +13,7 @@ namespace Monday.Client.Options
         public bool Include { get; set; } = true;
         public bool IncludeMetadata { get; set; } = true;
 
-        internal abstract string Build(OptionBuilderMode Mode);
+        internal abstract string Build(OptionBuilderMode mode);
     }
 
     public class OptionsBuilder
@@ -23,10 +23,10 @@ namespace Monday.Client.Options
             return Build(opt, OptionBuilderMode.Single);
         }
 
-        internal string Build(IBaseOptions opt, OptionBuilderMode Mode)
+        internal string Build(IBaseOptions opt, OptionBuilderMode mode)
         {
             if(opt is BaseOptions o)
-                return o.Build(Mode);
+                return o.Build(mode);
 
             return String.Empty;
         }
