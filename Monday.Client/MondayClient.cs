@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using GraphQL;
 using GraphQL.Client.Abstractions;
@@ -14,6 +15,10 @@ using Monday.Client.Options;
 using Monday.Client.Requests;
 using Monday.Client.Responses;
 
+// For unit tests:
+[assembly:InternalsVisibleTo("Monday.Client.Tests")]
+// For unit tests / fakeiteasy:
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 namespace Monday.Client
 {
     /// <summary>
@@ -21,26 +26,31 @@ namespace Monday.Client
     /// </summary>
     public class MondayClient
     {
-        private readonly OptionsBuilder _optionsBuilder;
+        private IGraphQLClient _graphQlHttpClient;
+        private OptionsBuilder _optionsBuilder;
 
         /// <summary>
         ///     Creates client for accessing Monday's endpoints.
         /// </summary>
         /// <param name="apiKey">The version 2 key.</param>
-        public MondayClient(string apiKey, IGraphQLClient client = null)
+        public MondayClient(string apiKey)
         {
-            _graphQlHttpClient = client;
-            if (client == null)
-            {
-                var graphQlHttpClient = new GraphQLHttpClient("https://api.monday.com/v2/", new NewtonsoftJsonSerializer());
-                graphQlHttpClient.HttpClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(apiKey);
-                _graphQlHttpClient = graphQlHttpClient;
-            }
+            var graphQlClient = new GraphQLHttpClient("https://api.monday.com/v2/", new NewtonsoftJsonSerializer());
+            graphQlClient.HttpClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(apiKey);
 
-            _optionsBuilder = new OptionsBuilder();
+            Initialize(graphQlClient);
         }
 
-        private IGraphQLClient _graphQlHttpClient { get; }
+        internal MondayClient(IGraphQLClient graphQlClient)
+        {
+            Initialize(graphQlClient);
+        }
+
+        private void Initialize(IGraphQLClient graphQlClient)
+        {
+            _graphQlHttpClient = graphQlClient;
+            _optionsBuilder = new OptionsBuilder();
+        }
 
         /// <summary>
         ///     Helper method for throwing all errors reported from the response.

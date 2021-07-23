@@ -55,7 +55,7 @@ namespace Monday.Client.Tests
                     });
                 });
 
-            _mondayClient = A.Fake<MondayClient>(_ => _.WithArgumentsForConstructor(new object[] { _fakeKey, _graphQlClient }));
+            _mondayClient = A.Fake<MondayClient>(_ => _.WithArgumentsForConstructor(new object[] { _graphQlClient }));
         }
 
         private void DumbCheckQueryEquivalence(string query1, string query2)
@@ -69,7 +69,7 @@ namespace Monday.Client.Tests
             var q2 = Regex.Replace(query2, @"\s+", String.Empty).ToCharArray().ToList();
             q2.Sort();
 
-            q1.ShouldBeEquivalentTo(q2, "query's do not match");
+            q1.ShouldBeEquivalentTo(q2, "querys do not match");
         }
 
         [TestMethod]
