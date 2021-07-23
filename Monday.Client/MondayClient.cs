@@ -184,12 +184,22 @@ namespace Monday.Client
         /// <returns></returns>
         public async Task<List<Group>> GetGroups(int boardId)
         {
+            return await GetGroups(new GetGroupsRequest(boardId));
+        }
+
+        public async Task<List<Group>> GetGroups(IGetGroupsRequest req)
+        { 
             var request = new GraphQLRequest
             {
-                Query = @"query request($id:Int!) { boards(ids: [$id]) { groups { id title color archived deleted }}}",
+                Query = $@"
+query request($id:Int!) {{ 
+    boards(ids: [$id]) {{ 
+        {_optionsBuilder.Build(req.GroupOptions, OptionBuilderMode.Multiple)}
+    }}
+}}",
                 Variables = new
                 {
-                    id = boardId
+                    id = req.BoardId
                 }
             };
 

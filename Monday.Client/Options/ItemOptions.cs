@@ -24,6 +24,9 @@ namespace Monday.Client.Options
                 case OptionBuilderMode.Raw:
                     return result;
 
+                case OptionBuilderMode.Multiple:
+                    return $@"items {{ {result} }}";
+
                 default:
                     return $@"item {{ {result} }}";
             }

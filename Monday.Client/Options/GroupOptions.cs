@@ -24,7 +24,19 @@ namespace Monday.Client.Options
             if (IncludeMetadata)
                 metadata = "archived deleted";
 
-            return $@"group {{ id title {color} {metadata} }}";
+            var result = $"id title {color} {metadata}";
+
+            switch (Mode)
+            {
+                case OptionBuilderMode.Raw:
+                    return result;
+
+                case OptionBuilderMode.Multiple:
+                    return $@"groups {{ {result} }}";
+
+                default:
+                    return $@"group {{ {result} }}";
+            }
         }
     }
 }
