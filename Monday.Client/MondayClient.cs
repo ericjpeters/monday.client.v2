@@ -75,10 +75,40 @@ namespace Monday.Client
         /// <returns></returns>
         public async Task<List<User>> GetUsers()
         {
-            var request = new GraphQLRequest
+            return await GetUsers(new GetUsersRequest());
+        }
+
+        public async Task<List<User>> GetUsers(IGetUsersRequest req)
+        {
+            GraphQLRequest request;
+            if (req.UserAccessType.HasValue)
             {
-                Query = @"query { users { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at }}"
-            };
+                request = new GraphQLRequest
+                {
+                    Query = $@"
+query request($userKind:UserKind) {{ 
+    users(kind:$userKind) {{ 
+        {_optionsBuilder.Build(req.UserOptions, OptionBuilderMode.Raw)}
+    }}
+}}",
+                    Variables = new
+                    {
+                        userKind = req.UserAccessType.Value.GetVariableUserAccessType()
+                    }
+                };
+            }
+            else
+            {
+                request = new GraphQLRequest
+                {
+                    Query = $@"
+query {{ 
+    users {{ 
+        {_optionsBuilder.Build(req.UserOptions, OptionBuilderMode.Raw)}
+    }}
+}}"
+                };
+            }
 
             var result = await _graphQlHttpClient.SendQueryAsync<GetUsersResponse>(request);
 
@@ -94,20 +124,9 @@ namespace Monday.Client
         /// <returns></returns>
         public async Task<List<User>> GetUsers(UserAccessTypes userAccessType)
         {
-            var request = new GraphQLRequest
-            {
-                Query = @"query request($userKind:UserKind) { users(kind:$userKind) { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at }}",
-                Variables = new
-                {
-                    userKind = userAccessType.GetVariableUserAccessType()
-                }
-            };
-
-            var result = await _graphQlHttpClient.SendQueryAsync<GetUsersResponse>(request);
-
-            ThrowResponseErrors(result.Errors);
-
-            return result.Data.Users;
+            return await GetUsers(new GetUsersRequest {
+                UserAccessType = userAccessType
+            });
         }
 
         /// <summary>
@@ -117,12 +136,22 @@ namespace Monday.Client
         /// <returns></returns>
         public async Task<User> GetUser(int userId)
         {
+            return await GetUser(new GetUserRequest(userId));
+        }
+
+        public async Task<User> GetUser(IGetUserRequest req)
+        {
             var request = new GraphQLRequest
             {
-                Query = @"query request($id:Int) { users(ids:[$id]) { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at }}",
+                Query = $@"
+query request($id:Int) {{ 
+    users(ids:[$id]) {{ 
+        {_optionsBuilder.Build(req.UserOptions, OptionBuilderMode.Raw)}
+    }}
+}}",
                 Variables = new
                 {
-                    id = userId
+                    id = req.UserId
                 }
             };
 
@@ -152,7 +181,7 @@ namespace Monday.Client
                 Query = $@"
 query {{ 
     boards(limit: {req.Limit}) {{ 
-        {_optionsBuilder.Build(req.BoardOptions, mode: OptionBuilderMode.Raw)}
+        {_optionsBuilder.Build(req.BoardOptions, OptionBuilderMode.Raw)}
         {_optionsBuilder.Build(req.OwnerOptions)}
     }}
 }}"
@@ -182,7 +211,7 @@ query {{
                 Query = $@"
 query request($id:Int) {{ 
     boards(ids:[$id]) {{ 
-        {_optionsBuilder.Build(req.BoardOptions, mode: OptionBuilderMode.Raw)}
+        {_optionsBuilder.Build(req.BoardOptions, OptionBuilderMode.Raw)}
         {_optionsBuilder.Build(req.OwnerOptions)}
         {_optionsBuilder.Build(req.ColumnOptions, OptionBuilderMode.Multiple)}
     }} 
@@ -249,7 +278,7 @@ query request($id:Int!) {{
 query request($id:Int) {{ 
     boards(ids:[$id]) {{ 
         items(limit: {req.Limit}) {{ 
-            {_optionsBuilder.Build(req.ItemOptions, mode: OptionBuilderMode.Raw)}
+            {_optionsBuilder.Build(req.ItemOptions, OptionBuilderMode.Raw)}
             {_optionsBuilder.Build(req.BoardOptions)}
             {_optionsBuilder.Build(req.GroupOptions)}
             {_optionsBuilder.Build(req.ColumnValuesOptions)}
@@ -290,7 +319,7 @@ query request($id:Int) {{
                 Query = $@"
 query request($id:Int) {{ 
     items(ids: [$id]) {{ 
-        {_optionsBuilder.Build(req.ItemOptions, mode: OptionBuilderMode.Raw)}
+        {_optionsBuilder.Build(req.ItemOptions, OptionBuilderMode.Raw)}
         {_optionsBuilder.Build(req.BoardOptions)}
         {_optionsBuilder.Build(req.GroupOptions)}
         {_optionsBuilder.Build(req.ColumnValuesOptions)}
@@ -318,12 +347,22 @@ query request($id:Int) {{
         /// <returns></returns>
         public async Task<List<Tag>> GetTags(int boardId)
         {
+            return await GetTags(new GetTagsRequest(boardId));
+        }
+
+        public async Task<List<Tag>> GetTags(IGetTagsRequest req)
+        {
             var request = new GraphQLRequest
             {
-                Query = @"query request($id:Int!) { boards(ids: [$id]) { tags { id name color } } } ",
+                Query = $@"
+query request($id:Int!) {{ 
+    boards(ids: [$id]) {{
+        {_optionsBuilder.Build(req.TagOptions, OptionBuilderMode.Multiple)}
+    }} 
+}}",
                 Variables = new
                 {
-                    id = boardId
+                    id = req.BoardId
                 }
             };
 
@@ -341,12 +380,22 @@ query request($id:Int) {{
         /// <returns></returns>
         public async Task<Tag> GetTag(int tagId)
         {
+            return await GetTag(new GetTagRequest(tagId));
+        }
+
+        public async Task<Tag> GetTag(IGetTagRequest req)
+        {
             var request = new GraphQLRequest
             {
-                Query = @"query request($id:Int!) { tags(ids: [$id]) { id name color } }",
+                Query = $@"
+query request($id:Int!) {{ 
+    tags(ids: [$id]) {{ 
+        {_optionsBuilder.Build(req.TagOptions, OptionBuilderMode.Raw)}
+    }} 
+}}",
                 Variables = new
                 {
-                    id = tagId
+                    id = req.TagId
                 }
             };
 
@@ -363,9 +412,20 @@ query request($id:Int) {{
         /// <returns></returns>
         public async Task<List<Team>> GetTeams()
         {
+            return await GetTeams(new GetTeamsRequest());
+        }
+
+        public async Task<List<Team>> GetTeams(IGetTeamsRequest req)
+        {
             var request = new GraphQLRequest
             {
-                Query = @"query request { teams { id name picture_url users { id name email } } }"
+                Query = $@"
+query request {{
+    teams {{
+        {_optionsBuilder.Build(req.TeamOptions, OptionBuilderMode.Raw)}
+        {_optionsBuilder.Build(req.UserOptions, OptionBuilderMode.Multiple)}
+    }} 
+}}"
             };
 
             var result = await _graphQlHttpClient.SendMutationAsync<GetTeamsResponse>(request);
@@ -381,12 +441,23 @@ query request($id:Int) {{
         /// <returns></returns>
         public async Task<Team> GetTeam(int teamId)
         {
+            return await GetTeam(new GetTeamRequest(teamId));
+        }
+
+        public async Task<Team> GetTeam(IGetTeamRequest req)
+        {
             var request = new GraphQLRequest
             {
-                Query = @"query request($id:Int!) { teams(ids: [$id]) { id name picture_url users { id name email } } }",
+                Query = $@"
+query request($id:Int!) {{ 
+    teams(ids: [$id]) {{
+        {_optionsBuilder.Build(req.TeamOptions, OptionBuilderMode.Raw)}
+        {_optionsBuilder.Build(req.UserOptions, OptionBuilderMode.Multiple)}
+    }} 
+}}",
                 Variables = new
                 {
-                    id = teamId
+                    id = req.TeamId
                 }
             };
 
