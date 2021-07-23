@@ -142,9 +142,20 @@ namespace Monday.Client
         /// <returns></returns>
         public async Task<List<Board>> GetBoards()
         {
+            return await GetBoards(new GetBoardsRequest());
+        }
+
+        public async Task<List<Board>> GetBoards(IGetBoardsRequest req)
+        {
             var request = new GraphQLRequest
             {
-                Query = @"query { boards(limit: 100000) { id name description board_kind state board_folder_id permissions owner { id name email }}}"
+                Query = $@"
+query {{ 
+    boards(limit: {req.Limit}) {{ 
+        {_optionsBuilder.Build(req.BoardOptions, mode: OptionBuilderMode.Raw)}
+        {_optionsBuilder.Build(req.OwnerOptions)}
+    }}
+}}"
             };
 
             var result = await _graphQlHttpClient.SendQueryAsync<GetBoardsResponse>(request);
