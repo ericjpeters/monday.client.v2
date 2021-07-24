@@ -73,4 +73,21 @@ namespace Monday.Client.Options
 }}";
         }
     }
+
+    public class CreatorOptions : UserOptions {
+        public CreatorOptions()
+        {
+            NameSingular = "creator";
+            NamePlural = "creators";
+        }
+    }
+
+    public class SubscriberOptions : UserOptions
+    {
+        public SubscriberOptions()
+        {
+            NameSingular = "subscriber";
+            NamePlural = "subscribers";
+        }
+    }
 }

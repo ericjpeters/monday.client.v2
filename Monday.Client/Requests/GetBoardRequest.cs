@@ -39,6 +39,26 @@ namespace Monday.Client.Requests
                     };
                     break;
 
+                case RequestMode.Maximum:
+                    BoardOptions = new BoardOptions
+                    {
+                        IncludeName = true,
+                        IncludeDescription = true,
+                        IncludeBoardAccessType = true,
+                        IncludeBoardStateType = true,
+                        IncludeBoardFolderId = true,
+                        IncludeColumns = true,
+                        IncludePermissions = true,
+                        ColumnOptions = new ColumnOptions
+                        {
+                            IncludeTitle = true,
+                            IncludeType = true,
+                            IncludeIsArchived = true,
+                            IncludeSettings = true
+                        }
+                    };
+                    break;
+
                 default:
                     BoardOptions = new BoardOptions
                     {

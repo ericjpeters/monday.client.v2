@@ -28,14 +28,26 @@ namespace Monday.Client.Requests
             {
                 case RequestMode.Minimum:
                     TagOptions = new TagOptions
-                    { 
+                    {
                         IncludeName = false,
                         IncludeColor = false
                     };
                     break;
 
+                case RequestMode.Maximum:
+                    TagOptions = new TagOptions
+                    {
+                        IncludeName = true,
+                        IncludeColor = true
+                    };
+                    break;
+
                 default:
-                    TagOptions = new TagOptions();
+                    TagOptions = new TagOptions
+                    {
+                        IncludeName = true,
+                        IncludeColor = true
+                    };
                     break;
             }
         }

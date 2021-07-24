@@ -373,5 +373,104 @@ namespace Monday.Client.Tests
 
             DumbCheckQueryEquivalence(_latestGraphQlRequest.Query, "query request($id:Int!) { teams(ids:[$id]) { id } }");
         }
+
+        [TestMethod]
+        public async Task EnsureGetItemCanReturnMaximums()
+        {
+            await _mondayClient.GetItem(new GetItemRequest(1234, RequestMode.Maximum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query request($id:Int) { items(ids:[$id]) { id name creator_id created_at updated_at creator { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } board { id name description board_kind state board_folder_id permissions } group { id title color archived deleted } column_values { id title value type text additional_info } subscribers { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetItemsCanReturnMaximums()
+        {
+            await _mondayClient.GetItems(new GetItemsRequest(1234, RequestMode.Maximum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query request($id:Int) { boards(ids:[$id]) { items(limit:100000) { id name creator_id created_at updated_at creator { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } board { id name description board_kind state board_folder_id permissions } group { id title color archived deleted } column_values { id title value type text additional_info } subscribers { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } } } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetUsersCanReturnMaximums()
+        {
+            await _mondayClient.GetUsers(new GetUsersRequest(RequestMode.Maximum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query { users { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetUserCanReturnMaximums()
+        {
+            await _mondayClient.GetUser(new GetUserRequest(1234, RequestMode.Maximum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query request($id:Int) { users(ids:[$id]) { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetBoardsCanReturnMaximums()
+        {
+            await _mondayClient.GetBoards(new GetBoardsRequest(RequestMode.Maximum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query { boards(limit:100000) { id name description board_kind state board_folder_id permissions columns { id title type archived settings_str } } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetBoardCanReturnMaximums()
+        {
+            await _mondayClient.GetBoard(new GetBoardRequest(1234, RequestMode.Maximum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query request($id:Int) { boards(ids:[$id]) { id name description board_kind state board_folder_id permissions columns { id title type archived settings_str } } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetGroupsCanReturnMaximums()
+        {
+            await _mondayClient.GetGroups(new GetGroupsRequest(1234, RequestMode.Maximum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query request($id:Int!) { boards(ids: [$id]) { groups { id title color archived deleted } } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetTagsCanReturnMaximums()
+        {
+            await _mondayClient.GetTags(new GetTagsRequest(1234, RequestMode.Maximum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query request($id:Int!) { boards(ids: [$id]) { tags { id name color } } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetTagCanReturnMaximums()
+        {
+            await _mondayClient.GetTag(new GetTagRequest(1234, RequestMode.Maximum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query request($id:Int!) { tags(ids:[$id]) { id name color } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetTeamsCanReturnMaximums()
+        {
+            await _mondayClient.GetTeams(new GetTeamsRequest(RequestMode.Maximum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query request { teams { id name picture_url users { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetTeamCanReturnMaximums()
+        {
+            await _mondayClient.GetTeam(new GetTeamRequest(1234, RequestMode.Maximum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
+                "query request($id:Int!) { teams(ids:[$id]) { id name picture_url users { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } } }");
+        }
     }
 }

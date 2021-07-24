@@ -18,8 +18,8 @@ namespace Monday.Client.Options
         BoardOptions BoardOptions { get; set; }
         GroupOptions GroupOptions { get; set; }
         ColumnValueOptions ColumnValueOptions { get; set; }
-        UserOptions CreatorOptions { get; set; }
-        UserOptions SubscriberOptions { get; set; }
+        CreatorOptions CreatorOptions { get; set; }
+        SubscriberOptions SubscriberOptions { get; set; }
     }
 
     public class ItemOptions : BaseOptions, IItemOptions
@@ -44,15 +44,11 @@ namespace Monday.Client.Options
             IncludeColor = true
         };
         public ColumnValueOptions ColumnValueOptions { get; set; } = new ColumnValueOptions();
-        public UserOptions CreatorOptions { get; set; } = new UserOptions
+        public CreatorOptions CreatorOptions { get; set; } = new CreatorOptions
         {
-            NameSingular = "creator",
-            NamePlural = "creators"
         };
-        public UserOptions SubscriberOptions { get; set; } = new UserOptions
+        public SubscriberOptions SubscriberOptions { get; set; } = new SubscriberOptions
         {
-            NameSingular = "subscriber",
-            NamePlural = "subscribers"
         };
 
         public ItemOptions()

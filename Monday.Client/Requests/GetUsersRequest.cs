@@ -45,8 +45,46 @@ namespace Monday.Client.Requests
                     };
                     break;
 
+                case RequestMode.Maximum:
+                    UserOptions = new UserOptions
+                    {
+                        IncludeName = true,
+                        IncludeEmail = true,
+                        IncludeUrl = true,
+                        IncludePhoto = true,
+                        IncludeTitle = true,
+                        IncludeBirthday = true,
+                        IncludeCountryCode = true,
+                        IncludeLocation = true,
+                        IncludeTimeZoneIdentifier = true,
+                        IncludePhone = true,
+                        IncludeMobilePhone = true,
+                        IncludeIsGuest = true,
+                        IncludeIsPending = true,
+                        IncludeIsEnabled = true,
+                        IncludeCreatedAt = true
+                    };
+                    break;
+
                 default:
-                    UserOptions = new UserOptions();
+                    UserOptions = new UserOptions
+                    {
+                        IncludeName = true,
+                        IncludeEmail = true,
+                        IncludeUrl = true,
+                        IncludePhoto = true,
+                        IncludeTitle = true,
+                        IncludeBirthday = true,
+                        IncludeCountryCode = true,
+                        IncludeLocation = true,
+                        IncludeTimeZoneIdentifier = true,
+                        IncludePhone = true,
+                        IncludeMobilePhone = true,
+                        IncludeIsGuest = true,
+                        IncludeIsPending = true,
+                        IncludeIsEnabled = true,
+                        IncludeCreatedAt = true
+                    };
                     break;
             }
         }

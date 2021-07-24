@@ -28,7 +28,34 @@ namespace Monday.Client.Requests
                         IncludeUsers = false
                     };
                     break;
- 
+
+                case RequestMode.Maximum:
+                    TeamOptions = new TeamOptions
+                    {
+                        IncludeName = true,
+                        IncludePhoto = true,
+                        IncludeUsers = true,
+                        UserOptions = new UserOptions
+                        {
+                            IncludeName = true,
+                            IncludeEmail = true,
+                            IncludeUrl = true,
+                            IncludePhoto = true,
+                            IncludeTitle = true,
+                            IncludeBirthday = true,
+                            IncludeCountryCode = true,
+                            IncludeLocation = true,
+                            IncludeTimeZoneIdentifier = true,
+                            IncludePhone = true,
+                            IncludeMobilePhone = true,
+                            IncludeIsGuest = true,
+                            IncludeIsPending = true,
+                            IncludeIsEnabled = true,
+                            IncludeCreatedAt = true
+                        }
+                    };
+                    break;
+
                 default:
                     TeamOptions = new TeamOptions
                     {

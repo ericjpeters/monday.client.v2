@@ -5,14 +5,12 @@ namespace Monday.Client.Options
 {
     public interface IBaseOptions 
     {
-        string NameSingular { get; set; }
-        string NamePlural { get; set; }
     }
 
     public abstract class BaseOptions : IBaseOptions
     {
-        public string NameSingular { get; set; }
-        public string NamePlural { get; set; }
+        protected string NameSingular { get; set; }
+        protected string NamePlural { get; set; }
 
         public BaseOptions(string singular)
             : this(singular, $"{singular}s")

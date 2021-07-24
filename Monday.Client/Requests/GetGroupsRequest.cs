@@ -36,6 +36,16 @@ namespace Monday.Client.Requests
                     };
                     break;
 
+                case RequestMode.Maximum:
+                    GroupOptions = new GroupOptions
+                    {
+                        IncludeTitle = true,
+                        IncludeColor = true,
+                        IncludeIsArchived = true,
+                        IncludeIsDeleted = true
+                    };
+                    break;
+
                 default:
                     GroupOptions = new GroupOptions
                     {
