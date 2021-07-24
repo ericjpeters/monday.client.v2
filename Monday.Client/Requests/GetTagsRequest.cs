@@ -13,11 +13,31 @@ namespace Monday.Client.Requests
     {
         public int BoardId { get; set; }
 
-        public ITagOptions TagOptions { get; set; } = new TagOptions();
+        public ITagOptions TagOptions { get; set; } 
 
         public GetTagsRequest(int boardId)
+            : this(boardId, RequestMode.Default)
+        {
+        }
+
+        public GetTagsRequest(int boardId, RequestMode mode)
         {
             BoardId = boardId;
+
+            switch (mode)
+            {
+                case RequestMode.Minimum:
+                    TagOptions = new TagOptions
+                    { 
+                        IncludeName = false,
+                        IncludeColor = false
+                    };
+                    break;
+
+                default:
+                    TagOptions = new TagOptions();
+                    break;
+            }
         }
     }
 }

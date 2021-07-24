@@ -9,6 +9,7 @@ using GraphQL;
 using GraphQL.Client.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Monday.Client.Models;
+using Monday.Client.Requests;
 using Monday.Client.Responses;
 using Shouldly;
 
@@ -283,6 +284,94 @@ namespace Monday.Client.Tests
 
             DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
                 "query request($id:Int!) { teams(ids: [$id]) { id name picture_url users { id name email } } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetItemCanReturnMinimums()
+        {
+            await _mondayClient.GetItem(new GetItemRequest(1234, RequestMode.Minimum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query, "query request($id:Int) { items(ids: [$id]) { id } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetItemsCanReturnMinimums()
+        {
+            await _mondayClient.GetItems(new GetItemsRequest(1234, RequestMode.Minimum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query, "query request($id:Int) { boards(ids:[$id]) { items(limit:100000) { id } } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetUsersCanReturnMinimums()
+        {
+            await _mondayClient.GetUsers(new GetUsersRequest(RequestMode.Minimum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query, "query { users { id } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetUserCanReturnMinimums()
+        {
+            await _mondayClient.GetUser(new GetUserRequest(1234, RequestMode.Minimum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query, "query request($id:Int) { users(ids: [$id]) { id } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetBoardsCanReturnMinimums()
+        {
+            await _mondayClient.GetBoards(new GetBoardsRequest(RequestMode.Minimum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query, "query { boards(limit:100000) { id } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetBoardCanReturnMinimums()
+        {
+            await _mondayClient.GetBoard(new GetBoardRequest(1234, RequestMode.Minimum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query, "query request($id:Int) { boards(ids: [$id]) { id } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetGroupsCanReturnMinimums()
+        {
+            await _mondayClient.GetGroups(new GetGroupsRequest(1234, RequestMode.Minimum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query, "query request($id:Int!) { boards(ids: [$id]) { groups { id } } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetTagsCanReturnMinimums()
+        {
+            await _mondayClient.GetTags(new GetTagsRequest(1234, RequestMode.Minimum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query, "query request($id:Int!) { boards(ids: [$id]) { tags { id } } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetTagCanReturnMinimums()
+        {
+            await _mondayClient.GetTag(new GetTagRequest(1234, RequestMode.Minimum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query, "query request($id:Int!) { tags(ids:[$id]) { id } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetTeamsCanReturnMinimums()
+        {
+            await _mondayClient.GetTeams(new GetTeamsRequest(RequestMode.Minimum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query, "query request { teams { id } }");
+        }
+
+        [TestMethod]
+        public async Task EnsureGetTeamCanReturnMinimums()
+        {
+            await _mondayClient.GetTeam(new GetTeamRequest(1234, RequestMode.Minimum));
+
+            DumbCheckQueryEquivalence(_latestGraphQlRequest.Query, "query request($id:Int!) { teams(ids:[$id]) { id } }");
         }
     }
 }

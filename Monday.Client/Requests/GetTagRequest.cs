@@ -13,11 +13,31 @@ namespace Monday.Client.Requests
     {
         public int TagId { get; set; }
 
-        public ITagOptions TagOptions { get; set; } = new TagOptions();
+        public ITagOptions TagOptions { get; set; } 
 
-        public GetTagRequest (int tagId)
+        public GetTagRequest(int tagId)
+            : this(tagId, RequestMode.Default)
+        {
+        }
+
+        public GetTagRequest(int tagId, RequestMode mode)
         {
             TagId = tagId;
+
+            switch (mode)
+            {
+                case RequestMode.Minimum:
+                    TagOptions = new TagOptions
+                    { 
+                        IncludeName = false,
+                        IncludeColor = false
+                    };
+                    break;
+
+                default:
+                    TagOptions = new TagOptions();
+                    break;
+            }
         }
     }
 }

@@ -13,14 +13,36 @@ namespace Monday.Client.Requests
     {
         public int BoardId { get; set; }
 
-        public IGroupOptions GroupOptions { get; set; } = new GroupOptions
-        {
-            IncludeColor = true
-        };
+        public IGroupOptions GroupOptions { get; set; }
 
         public GetGroupsRequest(int boardId)
+            : this(boardId, RequestMode.Default)
+        {
+        }
+
+        public GetGroupsRequest(int boardId, RequestMode mode)
         {
             BoardId = boardId;
+
+            switch(mode)
+            {
+                case RequestMode.Minimum:
+                    GroupOptions = new GroupOptions
+                    {
+                        IncludeTitle = false,
+                        IncludeColor = false,
+                        IncludeIsArchived = false,
+                        IncludeIsDeleted = false
+                    };
+                    break;
+
+                default:
+                    GroupOptions = new GroupOptions
+                    {
+                        IncludeColor = true
+                    };
+                    break;
+            }
         }
     }
 }

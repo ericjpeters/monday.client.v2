@@ -13,11 +13,39 @@ namespace Monday.Client.Requests
     {
         public int Limit { get; set; } = 100000;
 
-        public IBoardOptions BoardOptions { get; set; } = new BoardOptions
+        public IBoardOptions BoardOptions { get; set; }
+
+        public GetBoardsRequest()
+            : this(RequestMode.Default)
+        { 
+        }
+
+        public GetBoardsRequest(RequestMode mode)
         {
-            IncludeBoardStateType = true,
-            IncludeBoardFolderId = true,
-            IncludePermissions = true
-        };
+            switch (mode)
+            {
+                case RequestMode.Minimum:
+                    BoardOptions = new BoardOptions
+                    {
+                        IncludeName = false,
+                        IncludeDescription = false,
+                        IncludeBoardAccessType = false,
+                        IncludeBoardStateType = false,
+                        IncludeBoardFolderId = false,
+                        IncludeColumns = false,
+                        IncludePermissions = false
+                    };
+                    break;
+
+                default:
+                    BoardOptions = new BoardOptions
+                    {
+                        IncludeBoardStateType = true,
+                        IncludeBoardFolderId = true,
+                        IncludePermissions = true
+                    };
+                    break;
+            }
+        }
     }
 }
