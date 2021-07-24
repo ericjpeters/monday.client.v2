@@ -5,13 +5,17 @@ namespace Monday.Client.Options
     public interface IGroupOptions : IBaseOptions
     {
         bool IncludeColor { get; set; }
+        bool IncludeIsArchived { get; set; }
+        bool IncludeIsDeleted { get; set; }
     }
-    
+
     public class GroupOptions : BaseOptions, IGroupOptions
     {
         public bool IncludeColor { get; set; } = false;
+        public bool IncludeIsArchived { get; set; } = true;
+        public bool IncludeIsDeleted { get; set; } = true;
 
-        internal override string Build(OptionBuilderMode mode)
+        internal override string Build(OptionBuilderMode mode, (string key, string val)[] attrs)
         {
             if (!Include)
                 return String.Empty;
@@ -20,11 +24,15 @@ namespace Monday.Client.Options
             if (IncludeColor)
                 color = "color";
 
-            var metadata = String.Empty;
-            if (IncludeMetadata)
-                metadata = "archived deleted";
+            var archived = String.Empty;
+            if (IncludeIsArchived)
+                archived = "archived";
 
-            var result = $"id title {color} {metadata}";
+            var deleted = String.Empty;
+            if (IncludeIsDeleted)
+                deleted = "deleted";
+
+            var result = $"id title {color} {archived} {deleted}";
 
             switch (mode)
             {

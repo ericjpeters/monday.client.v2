@@ -87,9 +87,7 @@ namespace Monday.Client
                 {
                     Query = $@"
 query request($userKind:UserKind) {{ 
-    users(kind:$userKind) {{ 
-        {_optionsBuilder.Build(req.UserOptions, OptionBuilderMode.Raw)}
-    }}
+    {_optionsBuilder.Build(req.UserOptions, OptionBuilderMode.Multiple, ("kind", "$userKind"))}
 }}",
                     Variables = new
                     {
@@ -103,9 +101,7 @@ query request($userKind:UserKind) {{
                 {
                     Query = $@"
 query {{ 
-    users {{ 
-        {_optionsBuilder.Build(req.UserOptions, OptionBuilderMode.Raw)}
-    }}
+    {_optionsBuilder.Build(req.UserOptions, OptionBuilderMode.Multiple)}
 }}"
                 };
             }
@@ -145,9 +141,7 @@ query {{
             {
                 Query = $@"
 query request($id:Int) {{ 
-    users(ids:[$id]) {{ 
-        {_optionsBuilder.Build(req.UserOptions, OptionBuilderMode.Raw)}
-    }}
+    {_optionsBuilder.Build(req.UserOptions, OptionBuilderMode.Multiple, ("ids", "[$id]"))}
 }}",
                 Variables = new
                 {

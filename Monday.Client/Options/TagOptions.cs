@@ -8,7 +8,7 @@ namespace Monday.Client.Options
     
     public class TagOptions : BaseOptions, ITagOptions
     {
-        internal override string Build(OptionBuilderMode mode)
+        internal override string Build(OptionBuilderMode mode, (string key, string val)[] attrs)
         {
             if (!Include)
                 return String.Empty;

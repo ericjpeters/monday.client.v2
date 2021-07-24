@@ -4,20 +4,45 @@ namespace Monday.Client.Options
 {
     public interface IItemOptions : IBaseOptions
     {
+        bool IncludeCreatorId { get; set; }
+        bool IncludeCreatedAt { get; set; }
+        bool IncludeUpdatedAt { get; set; }
+        bool IncludeCreator { get; set; }
+
+        CreatorOptions CreatorOptions { get; set; }
     }
 
     public class ItemOptions : BaseOptions, IItemOptions
     {
-        internal override string Build(OptionBuilderMode mode)
+        public bool IncludeCreatorId { get; set; } = true;
+        public bool IncludeCreatedAt { get; set; } = true;
+        public bool IncludeUpdatedAt { get; set; } = true;
+        public bool IncludeCreator { get; set; } = true;
+
+        public CreatorOptions CreatorOptions { get; set; } = new CreatorOptions();
+
+        internal override string Build(OptionBuilderMode mode, (string key, string val)[] attrs)
         {
             if (!Include)
                 return String.Empty;
 
-            var metadata = String.Empty;
-            if (IncludeMetadata)
-                metadata = $@"creator_id created_at updated_at creator {{ id name email }}";
+            var creatorId = String.Empty;
+            if (IncludeCreatorId)
+                creatorId = $@"creator_id";
 
-            var result = $@"id name {metadata}";
+            var createdAt = String.Empty;
+            if (IncludeCreatedAt)
+                createdAt = $@"created_at";
+
+            var updatedAt = String.Empty;
+            if (IncludeUpdatedAt)
+                updatedAt = $@"updated_at";
+
+            var creator = String.Empty;
+            if (IncludeCreator)
+                creator = CreatorOptions.Build(OptionBuilderMode.Single);
+
+            var result = $@"id name {creatorId} {createdAt} {updatedAt} {creator}";
 
             switch (mode)
             {

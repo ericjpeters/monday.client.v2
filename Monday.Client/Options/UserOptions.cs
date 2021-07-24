@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Linq;
 
 namespace Monday.Client.Options
 {
     public interface IUserOptions : IBaseOptions
     {
+        bool IncludeName { get; set; }
+        bool IncludeEmail { get; set; }
         bool IncludeUrl { get; set; }
-        bool IncludePhotoOriginal { get; set; }
+        bool IncludePhoto { get; set; }
         bool IncludeTitle { get; set; }
         bool IncludeBirthday { get; set; }
         bool IncludeCountryCode { get; set; }
@@ -13,13 +16,18 @@ namespace Monday.Client.Options
         bool IncludeTimeZoneIdentifier { get; set; }
         bool IncludePhone { get; set; }
         bool IncludeMobilePhone { get; set; }
-        bool IncludeMetadata { get; set; }
+        bool IncludeIsGuest { get; set; }
+        bool IncludeIsPending { get; set; }
+        bool IncludeIsEnabled { get; set; }
+        bool IncludeCreatedAt { get; set; }
     }
 
     public class UserOptions : BaseOptions, IUserOptions
     {
+        public bool IncludeName { get; set; } = true;
+        public bool IncludeEmail { get; set; } = true;
         public bool IncludeUrl { get; set; } = true;
-        public bool IncludePhotoOriginal { get; set; } = true;
+        public bool IncludePhoto { get; set; } = true;
         public bool IncludeTitle { get; set; } = true;
         public bool IncludeBirthday { get; set; } = true;
         public bool IncludeCountryCode { get; set; } = true;
@@ -27,19 +35,42 @@ namespace Monday.Client.Options
         public bool IncludeTimeZoneIdentifier { get; set; } = true;
         public bool IncludePhone { get; set; } = true;
         public bool IncludeMobilePhone { get; set; } = true;
-        public bool IncludeMetadata { get; set; } = true;
+        public bool IncludeIsGuest { get; set; } = true;
+        public bool IncludeIsPending { get; set; } = true;
+        public bool IncludeIsEnabled { get; set; } = true;
+        public bool IncludeCreatedAt { get; set; } = true;
 
-        internal override string Build(OptionBuilderMode mode)
+        internal override string Build(OptionBuilderMode mode, (string key, string val)[] attrs)
         {
             if (!Include)
                 return String.Empty;
+
+            var model = "user";
+            if (mode == OptionBuilderMode.Multiple)
+                model = "users";
+
+            var attributes = String.Empty;
+            if (attrs != null)
+            {
+                attributes = attrs.Aggregate(String.Empty, (_c, _n) => $",{_n.key}:{_n.val}");
+                if (attributes.Length > 0)
+                    attributes = $"({attributes.Substring(1)})";
+            }
+
+            var name = String.Empty;
+            if (IncludeName)
+                name = "name";
+
+            var email = String.Empty;
+            if (IncludeEmail)
+                email = "email";
 
             var url = String.Empty;
             if (IncludeUrl)
                 url = "url";
 
             var photoOriginal = String.Empty;
-            if (IncludePhotoOriginal)
+            if (IncludePhoto)
                 photoOriginal = "photo_original";
 
             var title = String.Empty;
@@ -70,23 +101,27 @@ namespace Monday.Client.Options
             if (IncludeMobilePhone)
                 mobilePhone = "mobile_phone";
 
-            var metadata = String.Empty;
-            if (IncludeMetadata)
-                metadata = "is_guest is_pending enabled created_at";
+            var isGuest = String.Empty;
+            if (IncludeIsGuest)
+                isGuest = "is_guest";
 
-            var result = $"id name email {url} {photoOriginal} {title} {birthday} {countryCode} {location} {timeZoneIdentifier} {phone} {mobilePhone} {metadata}";
+            var isPending = String.Empty;
+            if (IncludeIsPending)
+                isPending = "is_pending";
 
-            switch (mode)
-            {
-                case OptionBuilderMode.Raw:
-                    return result;
+            var enabled = String.Empty;
+            if (IncludeIsEnabled)
+                enabled = "enabled";
 
-                case OptionBuilderMode.Multiple:
-                    return $@"users {{ {result} }}";
+            var createdAt = String.Empty;
+            if (IncludeCreatedAt)
+                createdAt = "created_at";
 
-                default:
-                    return $@"user {{ {result} }}";
-            }
+            return $@"
+{model}{attributes} {{
+    id {name} {email} {url} {photoOriginal} {title} {birthday} {countryCode} {location}
+    {timeZoneIdentifier} {phone} {mobilePhone} {isGuest} {isPending} {enabled} {createdAt}
+}}";
         }
     }
 }

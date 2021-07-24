@@ -161,7 +161,10 @@ namespace Monday.Client.Tests
             var q2 = Regex.Replace(query2, @"\s+", String.Empty).ToCharArray().ToList();
             q2.Sort();
 
-            q1.ShouldBeEquivalentTo(q2, "querys do not match");
+            q1.ShouldBeEquivalentTo(q2, $@">>> GraphQl querys do not match:
+    * Expected: {Regex.Replace(query2, @"\s+", " ").Trim()}
+    * Received: {Regex.Replace(query1, @"\s+", " ").Trim()}
+");
         }
 
         [TestMethod]

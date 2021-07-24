@@ -15,7 +15,7 @@ namespace Monday.Client.Options
         public bool IncludeBoardFolderId { get; set; } = false;
         public bool IncludePermissions { get; set; } = false;
 
-        internal override string Build(OptionBuilderMode mode)
+        internal override string Build(OptionBuilderMode mode, (string key, string val)[] attrs)
         {
             if (!Include)
                 return String.Empty;

@@ -14,7 +14,7 @@ namespace Monday.Client.Requests
         public UserOptions UserOptions { get; set; } = new UserOptions
         {
             IncludeUrl = false,
-            IncludePhotoOriginal = false,
+            IncludePhoto = false,
             IncludeTitle = false,
             IncludeBirthday = false,
             IncludeCountryCode = false,
@@ -22,7 +22,10 @@ namespace Monday.Client.Requests
             IncludeTimeZoneIdentifier = false,
             IncludePhone = false,
             IncludeMobilePhone = false,
-            IncludeMetadata = false
+            IncludeIsGuest = false,
+            IncludeIsPending = false,
+            IncludeIsEnabled = false,
+            IncludeCreatedAt = false
         };
     }
 }

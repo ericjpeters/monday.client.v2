@@ -15,7 +15,7 @@ namespace Monday.Client.Options
         public bool IncludeType { get; set; } = true;
         public bool IncludeAdditionalInfo { get; set; } = true;
 
-        internal override string Build(OptionBuilderMode mode)
+        internal override string Build(OptionBuilderMode mode, (string key, string val)[] attrs)
         {
             if (!Include)
                 return String.Empty;

@@ -8,7 +8,7 @@ namespace Monday.Client.Options
     
     public class ColumnOptions : BaseOptions, IColumnOptions
     {
-        internal override string Build(OptionBuilderMode mode)
+        internal override string Build(OptionBuilderMode mode, (string key, string val)[] attrs)
         {
             if (!Include)
                 return String.Empty;
