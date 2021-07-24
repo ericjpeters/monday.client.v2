@@ -40,7 +40,7 @@ namespace Monday.Client.Options
         public bool IncludeIsEnabled { get; set; } = true;
         public bool IncludeCreatedAt { get; set; } = true;
 
-        internal override string Build(OptionBuilderMode mode, (string key, string val)[] attrs)
+        internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
         {
             if (!Include)
                 return String.Empty;

@@ -15,7 +15,7 @@ namespace Monday.Client.Requests
         public int Limit { get; set; } = 100000;
 
         public IBoardOptions BoardOptions { get; set; } = new BoardOptions { 
-            IncludeState = true,
+            IncludeBoardStateType = true,
             IncludeBoardFolderId = true,
             IncludePermissions = true
         };

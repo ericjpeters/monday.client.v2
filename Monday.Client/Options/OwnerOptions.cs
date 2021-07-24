@@ -29,7 +29,7 @@ namespace Monday.Client.Options
         public bool IncludeMobilePhone { get; set; } = true;
         public bool IncludeMetadata { get; set; } = true;
 
-        internal override string Build(OptionBuilderMode mode, (string key, string val)[] attrs)
+        internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
         {
             if (!Include)
                 return String.Empty;

@@ -14,7 +14,7 @@ namespace Monday.Client.Options
         public bool IncludeName { get; set; } = true;
         public bool IncludeEmail { get; set; } = true;
 
-        internal override string Build(OptionBuilderMode mode, (string key, string val)[] attrs = null)
+        internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
         {
             if (!Include)
                 return String.Empty;

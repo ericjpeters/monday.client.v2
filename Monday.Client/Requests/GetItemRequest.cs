@@ -20,7 +20,7 @@ namespace Monday.Client.Requests
         public IItemOptions ItemOptions { get; set; } = new ItemOptions();
         public IBoardOptions BoardOptions { get; set; } = new BoardOptions
         {
-            IncludeState = true,
+            IncludeBoardStateType = true,
             IncludeBoardFolderId = true
         };
         public IGroupOptions GroupOptions { get; set; } = new GroupOptions

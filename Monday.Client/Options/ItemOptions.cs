@@ -21,7 +21,7 @@ namespace Monday.Client.Options
 
         public CreatorOptions CreatorOptions { get; set; } = new CreatorOptions();
 
-        internal override string Build(OptionBuilderMode mode, (string key, string val)[] attrs)
+        internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
         {
             if (!Include)
                 return String.Empty;

@@ -217,8 +217,11 @@ namespace Monday.Client.Tests
         {
             await _mondayClient.GetBoards();
 
+            // Original query included user and owner information, but the resulting model does not represent that
+            // data.  Therefore, I am removing it from the query...
+            // The query was: "query { boards(limit: 100000) { id name description board_kind state board_folder_id permissions owner { id name email }}}"
             DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
-                "query { boards(limit: 100000) { id name description board_kind state board_folder_id permissions owner { id name email }}}");
+                "query { boards(limit: 100000) { id name description board_kind state board_folder_id permissions }}");
         }
 
         [TestMethod]
@@ -226,8 +229,12 @@ namespace Monday.Client.Tests
         {
             await _mondayClient.GetBoard(1234);
 
+            // Original query included user and owner information, but the resulting model does not represent that
+            // data.  Therefore, I am removing it from the query...
+            // The query was: "query request($id:Int) { boards(ids:[$id]) { id name description board_kind state board_folder_id permissions owner { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } columns { id, title, type, archived settings_str } } }"
+            // I also removed the unnecessary commas in the columns list.
             DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
-                "query request($id:Int) { boards(ids:[$id]) { id name description board_kind state board_folder_id permissions owner { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } columns { id, title, type, archived settings_str } } }");
+                "query request($id:Int) { boards(ids:[$id]) { id name description board_kind state board_folder_id permissions columns { id title type archived settings_str } } }");
         }
 
         [TestMethod]

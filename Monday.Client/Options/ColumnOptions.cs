@@ -8,12 +8,12 @@ namespace Monday.Client.Options
     
     public class ColumnOptions : BaseOptions, IColumnOptions
     {
-        internal override string Build(OptionBuilderMode mode, (string key, string val)[] attrs)
+        internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
         {
             if (!Include)
                 return String.Empty;
 
-            var result = $"id, title, type, archived settings_str";
+            var result = $"id title type archived settings_str";
 
             switch (mode)
             {

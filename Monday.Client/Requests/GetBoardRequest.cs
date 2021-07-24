@@ -16,9 +16,10 @@ namespace Monday.Client.Requests
         public int BoardId { get; set; }
 
         public IBoardOptions BoardOptions { get; set; } = new BoardOptions { 
-            IncludeState = true,
+            IncludeBoardStateType = true,
             IncludeBoardFolderId = true,
-            IncludePermissions = true
+            IncludePermissions = true,
+            IncludeColumns = true
         };
         public IOwnerOptions OwnerOptions { get; set; } = new OwnerOptions();
         public IColumnOptions ColumnOptions { get; set; } = new ColumnOptions();

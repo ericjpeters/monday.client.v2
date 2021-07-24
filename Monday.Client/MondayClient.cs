@@ -174,10 +174,7 @@ query request($id:Int) {{
             {
                 Query = $@"
 query {{ 
-    boards(limit: {req.Limit}) {{ 
-        {_optionsBuilder.Build(req.BoardOptions, OptionBuilderMode.Raw)}
-        {_optionsBuilder.Build(req.OwnerOptions)}
-    }}
+    {_optionsBuilder.Build(req.BoardOptions, OptionBuilderMode.Multiple, ("limit", req.Limit))}
 }}"
             };
 
@@ -204,11 +201,7 @@ query {{
             {
                 Query = $@"
 query request($id:Int) {{ 
-    boards(ids:[$id]) {{ 
-        {_optionsBuilder.Build(req.BoardOptions, OptionBuilderMode.Raw)}
-        {_optionsBuilder.Build(req.OwnerOptions)}
-        {_optionsBuilder.Build(req.ColumnOptions, OptionBuilderMode.Multiple)}
-    }} 
+    {_optionsBuilder.Build(req.BoardOptions, OptionBuilderMode.Multiple, ("ids", "[$id]"))}
 }}",
                 Variables = new
                 {
