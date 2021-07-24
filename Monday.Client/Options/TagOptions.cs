@@ -8,6 +8,11 @@ namespace Monday.Client.Options
     
     public class TagOptions : BaseOptions, ITagOptions
     {
+        public TagOptions()
+           : base("tag", "tags")
+        {
+        }
+
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
         {
             if (!Include)

@@ -172,8 +172,11 @@ namespace Monday.Client.Tests
         {
             await _mondayClient.GetItem(1234);
 
+            // Original query included updates information, but the resulting model does not represent that
+            // data.  Therefore, I am removing it from the query...
+            // The query was: "query request($id:Int) { items(ids: [$id]) { id name board { id name description board_kind state board_folder_id } group { id title color archived deleted } column_values { id text title type value additional_info } subscribers { id name email } updates(limit: 100000) { id body text_body replies { id body text_body creator_id creator { id name email } created_at updated_at } creator_id creator { id name email } created_at updated_at } creator_id created_at updated_at creator { id name email } } }"
             DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
-                "query request($id:Int) { items(ids: [$id]) { id name board { id name description board_kind state board_folder_id } group { id title color archived deleted } column_values { id text title type value additional_info } subscribers { id name email } updates(limit: 100000) { id body text_body replies { id body text_body creator_id creator { id name email } created_at updated_at } creator_id creator { id name email } created_at updated_at } creator_id created_at updated_at creator { id name email } } }");
+                "query request($id:Int) { items(ids: [$id]) { id name board { id name description board_kind state board_folder_id } group { id title color archived deleted } column_values { id text title type value additional_info } subscribers { id name email } creator_id created_at updated_at creator { id name email } } }");
         }
 
         [TestMethod]

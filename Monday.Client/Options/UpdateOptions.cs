@@ -7,8 +7,12 @@ namespace Monday.Client.Options
         int Limit { get; set; }
     }
 
-    public class UpdatesOptions : BaseOptions, IUpdatesOptions
+    public class UpdateOptions : BaseOptions, IUpdatesOptions
     {
+        public UpdateOptions()
+           : base("update", "updates")
+        {
+        }
         public int Limit { get; set; } = 100000;
 
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)

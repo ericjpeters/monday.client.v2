@@ -10,6 +10,14 @@ namespace Monday.Client.Options
     public abstract class BaseOptions : IBaseOptions
     {
         public bool Include { get; set; } = true;
+        public string BaseNameSingular { get; set; }
+        public string BaseNamePlural { get; set; }
+
+        public BaseOptions(string singular, string plural)
+        {
+            BaseNameSingular = singular;
+            BaseNamePlural = plural;
+        }
 
         internal abstract string Build(OptionBuilderMode mode, (string key, object val)[] attrs);
     }

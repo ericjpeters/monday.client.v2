@@ -28,14 +28,19 @@ namespace Monday.Client.Options
 
         public ColumnOptions ColumnOptions { get; set; } = new ColumnOptions();
 
+        public BoardOptions()
+            : base("board", "boards")
+        { 
+        }
+
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
         {
             if (!Include)
                 return String.Empty;
 
-            var model = "board";
+            var model = BaseNameSingular;
             if (mode == OptionBuilderMode.Multiple)
-                model = "boards";
+                model = BaseNamePlural;
 
             var attributes = String.Empty;
             if (attrs != null)

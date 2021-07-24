@@ -8,6 +8,11 @@ namespace Monday.Client.Options
     
     public class ColumnOptions : BaseOptions, IColumnOptions
     {
+        public ColumnOptions()
+            : base("column", "columns")
+        {
+        }
+
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
         {
             if (!Include)

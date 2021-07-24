@@ -9,11 +9,16 @@ namespace Monday.Client.Options
         bool IncludeAdditionalInfo { get; set; }
     }
 
-    public class ColumnValuesOptions : BaseOptions, IColumnValuesOptions
+    public class ColumnValueOptions : BaseOptions, IColumnValuesOptions
     {
         public bool IncludeValue { get; set; } = true;
         public bool IncludeType { get; set; } = true;
         public bool IncludeAdditionalInfo { get; set; } = true;
+
+        public ColumnValueOptions()
+            : base("column_value", "column_values")
+        {
+        }
 
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
         {

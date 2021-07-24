@@ -7,29 +7,64 @@ namespace Monday.Client.Requests
         int ItemId { get; set; }
 
         IItemOptions ItemOptions { get; set; }
-        IBoardOptions BoardOptions { get; set; }
-        IGroupOptions GroupOptions { get; set; }
-        IColumnValuesOptions ColumnValuesOptions { get; set; }
-        ISubscribersOptions SubscribersOptions { get; set; }
-        IUpdatesOptions UpdatesOptions { get; set; }
     }
 
     public class GetItemRequest : IGetItemRequest
     {
         public int ItemId { get; set; }
-        public IItemOptions ItemOptions { get; set; } = new ItemOptions();
-        public IBoardOptions BoardOptions { get; set; } = new BoardOptions
+
+        public IItemOptions ItemOptions { get; set; } = new ItemOptions
         {
-            IncludeBoardStateType = true,
-            IncludeBoardFolderId = true
+            IncludeColumnValues = true,
+            CreatorOptions = new UserOptions
+            {
+                BaseNameSingular = "creator",
+                BaseNamePlural = "creators",
+                IncludeUrl = false,
+                IncludePhoto = false,
+                IncludeTitle = false,
+                IncludeBirthday = false,
+                IncludeCountryCode = false,
+                IncludeLocation = false,
+                IncludeTimeZoneIdentifier = false,
+                IncludePhone = false,
+                IncludeMobilePhone = false,
+                IncludeIsGuest = false,
+                IncludeIsPending = false,
+                IncludeIsEnabled = false,
+                IncludeCreatedAt = false
+            },
+            IncludeBoard = true,
+            BoardOptions = new BoardOptions
+            { 
+                IncludeBoardStateType = true,
+                IncludeBoardFolderId = true
+            },
+            IncludeGroup = true,
+            GroupOptions = new GroupOptions
+            {
+                IncludeColor = true
+            },
+            IncludeSubscribers = true,
+            SubscriberOptions = new UserOptions
+            { 
+                BaseNamePlural = "subscribers",
+                BaseNameSingular = "subscriber",
+                IncludeUrl = false,
+                IncludePhoto = false,
+                IncludeTitle = false,
+                IncludeBirthday = false,
+                IncludeCountryCode = false,
+                IncludeLocation = false,
+                IncludeTimeZoneIdentifier = false,
+                IncludePhone = false,
+                IncludeMobilePhone = false,
+                IncludeIsGuest = false,
+                IncludeIsPending = false,
+                IncludeIsEnabled = false,
+                IncludeCreatedAt = false
+            }
         };
-        public IGroupOptions GroupOptions { get; set; } = new GroupOptions
-        {
-            IncludeColor = true
-        };
-        public IColumnValuesOptions ColumnValuesOptions { get; set; } = new ColumnValuesOptions();
-        public ISubscribersOptions SubscribersOptions { get; set; } = new SubscribersOptions();
-        public IUpdatesOptions UpdatesOptions { get; set; } = new UpdatesOptions();
 
         public GetItemRequest(int itemId)
         {

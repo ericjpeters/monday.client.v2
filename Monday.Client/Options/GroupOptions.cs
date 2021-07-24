@@ -15,6 +15,11 @@ namespace Monday.Client.Options
         public bool IncludeIsArchived { get; set; } = true;
         public bool IncludeIsDeleted { get; set; } = true;
 
+        public GroupOptions()
+           : base("group", "groups")
+        {
+        }
+
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
         {
             if (!Include)

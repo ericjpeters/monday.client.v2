@@ -8,6 +8,11 @@ namespace Monday.Client.Options
     
     public class TeamOptions : BaseOptions, ITeamOptions
     {
+        public TeamOptions()
+           : base("team", "teams")
+        {
+        }
+
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
         {
             if (!Include)

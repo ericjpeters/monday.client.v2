@@ -7,7 +7,7 @@ namespace Monday.Client.Requests
         int Limit { get; set; }
 
         IBoardOptions BoardOptions { get; set; }
-        IOwnerOptions OwnerOptions { get; set; }
+        IUserOptions OwnerOptions { get; set; }
     }
 
     public class GetBoardsRequest : IGetBoardsRequest
@@ -19,9 +19,9 @@ namespace Monday.Client.Requests
             IncludeBoardFolderId = true,
             IncludePermissions = true
         };
-        public IOwnerOptions OwnerOptions { get; set; } = new OwnerOptions {
+        public IUserOptions OwnerOptions { get; set; } = new UserOptions {
             IncludeUrl = false,
-            IncludePhotoOriginal = false,
+            IncludePhoto = false,
             IncludeTitle = false,
             IncludeBirthday = false,
             IncludeCountryCode = false,
@@ -29,7 +29,10 @@ namespace Monday.Client.Requests
             IncludeTimeZoneIdentifier = false,
             IncludePhone = false,
             IncludeMobilePhone = false,
-            IncludeMetadata = false
+            IncludeIsGuest = false,
+            IncludeIsPending = false,
+            IncludeIsEnabled = false,
+            IncludeCreatedAt = false
         };
     }
 }

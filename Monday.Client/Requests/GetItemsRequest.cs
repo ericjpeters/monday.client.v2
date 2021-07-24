@@ -7,10 +7,7 @@ namespace Monday.Client.Requests
         int BoardId { get; set; }
         int Limit { get; set; }
 
-        IBoardOptions BoardOptions { get; set; }
-        IGroupOptions GroupOptions { get; set; }
         IItemOptions ItemOptions { get; set; }
-        IColumnValuesOptions ColumnValuesOptions { get; set; } 
     }
 
     public class GetItemsRequest : IGetItemsRequest
@@ -18,10 +15,33 @@ namespace Monday.Client.Requests
         public int BoardId { get; set; }
 
         public int Limit { get; set; } = 100000;
-        public IBoardOptions BoardOptions { get; set; } = new BoardOptions();
-        public IGroupOptions GroupOptions { get; set; } = new GroupOptions();
-        public IItemOptions ItemOptions { get; set; } = new ItemOptions();
-        public IColumnValuesOptions ColumnValuesOptions { get; set; } = new ColumnValuesOptions { Include = false };
+
+        public IItemOptions ItemOptions { get; set; } = new ItemOptions
+        {
+            IncludeColumnValues = false,
+            CreatorOptions = new UserOptions 
+            { 
+                BaseNameSingular = "creator",
+                BaseNamePlural = "creators",
+                IncludeUrl = false,
+                IncludePhoto = false,
+                IncludeTitle = false,
+                IncludeBirthday = false,
+                IncludeCountryCode = false,
+                IncludeLocation = false,
+                IncludeTimeZoneIdentifier = false,
+                IncludePhone = false,
+                IncludeMobilePhone = false,
+                IncludeIsGuest = false,
+                IncludeIsPending = false,
+                IncludeIsEnabled = false,
+                IncludeCreatedAt = false
+            },
+            IncludeBoard = true,
+            BoardOptions = new BoardOptions(),
+            IncludeGroup = true,
+            GroupOptions = new GroupOptions()
+        };
 
         public GetItemsRequest(int boardId)
         {
