@@ -4,40 +4,41 @@ namespace Monday.Client.Options
 {
     public interface IColumnValuesOptions : IBaseOptions
     {
+        bool IncludeTitle { get; set; }
         bool IncludeValue { get; set; }
         bool IncludeType { get; set; }
+        bool IncludeText { get; set; }
         bool IncludeAdditionalInfo { get; set; }
     }
 
     public class ColumnValueOptions : BaseOptions, IColumnValuesOptions
     {
+        public bool IncludeTitle { get; set; } = true;
         public bool IncludeValue { get; set; } = true;
         public bool IncludeType { get; set; } = true;
+        public bool IncludeText { get; set; } = true;
         public bool IncludeAdditionalInfo { get; set; } = true;
 
         public ColumnValueOptions()
-            : base("column_value", "column_values")
+            : base("column_value")
         {
         }
 
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
         {
-            if (!Include)
-                return String.Empty;
+            var modelName = GetModelName(mode);
+            var modelAttributes = GetModelAttributes(attrs);
 
-            var type = String.Empty;
-            if (IncludeType)
-                type = "type";
+            var title = GetField(IncludeTitle, "title");
+            var value = GetField(IncludeValue, "value");
+            var type = GetField(IncludeType, "type");
+            var valueText = GetField(IncludeText, "text");
+            var information = GetField(IncludeAdditionalInfo, "additional_info");
 
-            var value = String.Empty;
-            if (IncludeValue)
-                value = "value";
-
-            var additionalInfo = String.Empty;
-            if (IncludeAdditionalInfo)
-                additionalInfo = "additional_info";
-
-            return $@"column_values {{ id text title {type} {value} {additionalInfo} }} ";
+            return $@"
+{modelName}{modelAttributes} {{
+    id {title} {value} {type} {valueText} {information}
+}}";
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Monday.Client.Models
         /// <summary>
         ///     The team's picture url.
         /// </summary>
-        [JsonProperty("photo_url")]
+        [JsonProperty("picture_url")]
         public string Photo { get; set; }
 
         /// <summary>

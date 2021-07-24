@@ -4,33 +4,32 @@ namespace Monday.Client.Options
 {
     public interface ITagOptions : IBaseOptions
     {
+        bool IncludeName { get; set; }
+        bool IncludeColor { get; set; }
     }
-    
+
     public class TagOptions : BaseOptions, ITagOptions
     {
+        public bool IncludeName { get; set; } = true;
+        public bool IncludeColor { get; set; } = true;
+
         public TagOptions()
-           : base("tag", "tags")
+           : base("tag")
         {
         }
 
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
         {
-            if (!Include)
-                return String.Empty;
+            var modelName = GetModelName(mode);
+            var modelAttributes = GetModelAttributes(attrs);
 
-            var result = $"id name color";
+            var name = GetField(IncludeName, "name");
+            var color = GetField(IncludeColor, "color");
 
-            switch (mode)
-            {
-                case OptionBuilderMode.Raw:
-                    return result;
-
-                case OptionBuilderMode.Multiple:
-                    return $@"tags {{ {result} }}";
-
-                default:
-                    return $@"tag {{ {result} }}";
-            }
+            return $@"
+{modelName}{modelAttributes} {{
+    id {name} {color}
+}}";
         }
     }
 }

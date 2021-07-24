@@ -1,9 +1,8 @@
-﻿using System;
-
-namespace Monday.Client.Options
+﻿namespace Monday.Client.Options
 {
     public interface IGroupOptions : IBaseOptions
     {
+        bool IncludeTitle { get; set; }
         bool IncludeColor { get; set; }
         bool IncludeIsArchived { get; set; }
         bool IncludeIsDeleted { get; set; }
@@ -11,45 +10,30 @@ namespace Monday.Client.Options
 
     public class GroupOptions : BaseOptions, IGroupOptions
     {
+        public bool IncludeTitle { get; set; } = true;
         public bool IncludeColor { get; set; } = false;
         public bool IncludeIsArchived { get; set; } = true;
         public bool IncludeIsDeleted { get; set; } = true;
 
         public GroupOptions()
-           : base("group", "groups")
+           : base("group")
         {
         }
 
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
         {
-            if (!Include)
-                return String.Empty;
+            var modelName = GetModelName(mode);
+            var modelAttributes = GetModelAttributes(attrs);
 
-            var color = String.Empty;
-            if (IncludeColor)
-                color = "color";
+            var title = GetField(IncludeTitle, "title");
+            var color = GetField(IncludeColor, "color");
+            var isArchived = GetField(IncludeIsArchived, "archived");
+            var isDeleted = GetField(IncludeIsDeleted, "deleted");
 
-            var archived = String.Empty;
-            if (IncludeIsArchived)
-                archived = "archived";
-
-            var deleted = String.Empty;
-            if (IncludeIsDeleted)
-                deleted = "deleted";
-
-            var result = $"id title {color} {archived} {deleted}";
-
-            switch (mode)
-            {
-                case OptionBuilderMode.Raw:
-                    return result;
-
-                case OptionBuilderMode.Multiple:
-                    return $@"groups {{ {result} }}";
-
-                default:
-                    return $@"group {{ {result} }}";
-            }
+            return $@"
+{modelName}{modelAttributes} {{
+    id {title} {color} {isArchived} {isDeleted}
+}}";
         }
     }
 }

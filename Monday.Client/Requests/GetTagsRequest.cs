@@ -6,14 +6,14 @@ namespace Monday.Client.Requests
     {
         int BoardId { get; set; }
 
-        TagOptions TagOptions { get; set; }
+        ITagOptions TagOptions { get; set; }
     }
 
     public class GetTagsRequest : IGetTagsRequest
     {
         public int BoardId { get; set; }
 
-        public TagOptions TagOptions { get; set; } = new TagOptions();
+        public ITagOptions TagOptions { get; set; } = new TagOptions();
 
         public GetTagsRequest(int boardId)
         {

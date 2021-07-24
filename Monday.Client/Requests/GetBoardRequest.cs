@@ -7,8 +7,6 @@ namespace Monday.Client.Requests
         int BoardId { get; set; }
 
         IBoardOptions BoardOptions { get; set; }
-        IUserOptions OwnerOptions { get; set; }
-        IColumnOptions ColumnOptions { get; set; }
     }
 
     public class GetBoardRequest  : IGetBoardRequest
@@ -21,8 +19,6 @@ namespace Monday.Client.Requests
             IncludePermissions = true,
             IncludeColumns = true
         };
-        public IUserOptions OwnerOptions { get; set; } = new UserOptions();
-        public IColumnOptions ColumnOptions { get; set; } = new ColumnOptions();
 
         public GetBoardRequest(int boardId)
         {

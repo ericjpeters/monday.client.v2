@@ -21,8 +21,8 @@ namespace Monday.Client.Requests
             IncludeColumnValues = false,
             CreatorOptions = new UserOptions 
             { 
-                BaseNameSingular = "creator",
-                BaseNamePlural = "creators",
+                NameSingular = "creator",
+                NamePlural = "creators",
                 IncludeUrl = false,
                 IncludePhoto = false,
                 IncludeTitle = false,

@@ -6,30 +6,32 @@ namespace Monday.Client.Requests
     {
         int TeamId { get; set; }
 
-        TeamOptions TeamOptions { get; set; } 
-        UserOptions UserOptions { get; set; } 
+        ITeamOptions TeamOptions { get; set; } 
     }
 
     public class GetTeamRequest : IGetTeamRequest
     {
         public int TeamId { get; set; }
 
-        public TeamOptions TeamOptions { get; set; } = new TeamOptions();
-        public UserOptions UserOptions { get; set; } = new UserOptions
+        public ITeamOptions TeamOptions { get; set; } = new TeamOptions
         {
-            IncludeUrl = false,
-            IncludePhoto = false,
-            IncludeTitle = false,
-            IncludeBirthday = false,
-            IncludeCountryCode = false,
-            IncludeLocation = false,
-            IncludeTimeZoneIdentifier = false,
-            IncludePhone = false,
-            IncludeMobilePhone = false,
-            IncludeIsGuest = false,
-            IncludeIsPending = false,
-            IncludeIsEnabled = false,
-            IncludeCreatedAt = false
+            IncludeUsers = true,
+            UserOptions = new UserOptions
+            {
+                IncludeUrl = false,
+                IncludePhoto = false,
+                IncludeTitle = false,
+                IncludeBirthday = false,
+                IncludeCountryCode = false,
+                IncludeLocation = false,
+                IncludeTimeZoneIdentifier = false,
+                IncludePhone = false,
+                IncludeMobilePhone = false,
+                IncludeIsGuest = false,
+                IncludeIsPending = false,
+                IncludeIsEnabled = false,
+                IncludeCreatedAt = false
+            }
         };
 
         public GetTeamRequest(int teamId)

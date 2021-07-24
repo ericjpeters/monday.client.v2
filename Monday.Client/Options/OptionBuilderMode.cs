@@ -3,7 +3,6 @@
     internal enum OptionBuilderMode
     {
         Single,
-        Multiple,
-        Raw
+        Multiple
     }
 }

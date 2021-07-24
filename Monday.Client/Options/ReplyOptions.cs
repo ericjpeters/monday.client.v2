@@ -1,10 +1,7 @@
-﻿using System;
-
-namespace Monday.Client.Options
+﻿namespace Monday.Client.Options
 {
-    public interface IUpdateOptions : IBaseOptions
+    public interface IReplyOptions : IBaseOptions
     {
-        bool IncludeItemId { get; set; }
         bool IncludeCreatorId { get; set; }
         bool IncludeCreator { get; set; }
         bool IncludeBody { get; set; }
@@ -17,9 +14,8 @@ namespace Monday.Client.Options
         ReplyOptions RepliesOptions { get; set; }
     }
 
-    public class UpdateOptions : BaseOptions, IUpdateOptions
+    public class ReplyOptions : BaseOptions, IReplyOptions
     {
-        public bool IncludeItemId { get; set; }
         public bool IncludeCreatorId { get; set; }
         public bool IncludeCreator { get; set; }
         public bool IncludeBody { get; set; }
@@ -31,8 +27,8 @@ namespace Monday.Client.Options
         public UserOptions CreatorOptions { get; set; }
         public ReplyOptions RepliesOptions { get; set; }
 
-        public UpdateOptions()
-           : base("update")
+        public ReplyOptions()
+           : base("reply", "replies")
         {
         }
 
@@ -41,7 +37,6 @@ namespace Monday.Client.Options
             var modelName = GetModelName(mode);
             var modelAttributes = GetModelAttributes(attrs);
 
-            var itemId = GetField(IncludeItemId, "item_id");
             var creatorId = GetField(IncludeCreatorId, "creator_id");
             var body = GetField(IncludeBody, "body");
             var bodyText = GetField(IncludeBodyText, "text_body");
@@ -53,8 +48,9 @@ namespace Monday.Client.Options
 
             return $@"
 {modelName}{modelAttributes} {{
-    id {itemId} {creatorId} {body} {bodyText} {createdAt} {updatedAt} {creator} {replies}
+    id {creatorId} {body} {bodyText} {createdAt} {updatedAt} {creator} {replies}
 }}";
         }
     }
 }
+

@@ -364,9 +364,7 @@ query request($id:Int!) {{
             {
                 Query = $@"
 query request($id:Int!) {{ 
-    tags(ids: [$id]) {{ 
-        {_optionsBuilder.Build(req.TagOptions, OptionBuilderMode.Raw)}
-    }} 
+    {_optionsBuilder.Build(req.TagOptions, OptionBuilderMode.Multiple, ("ids", "[$id]"))}
 }}",
                 Variables = new
                 {
@@ -396,10 +394,7 @@ query request($id:Int!) {{
             {
                 Query = $@"
 query request {{
-    teams {{
-        {_optionsBuilder.Build(req.TeamOptions, OptionBuilderMode.Raw)}
-        {_optionsBuilder.Build(req.UserOptions, OptionBuilderMode.Multiple)}
-    }} 
+    {_optionsBuilder.Build(req.TeamOptions, OptionBuilderMode.Multiple)}
 }}"
             };
 
@@ -425,10 +420,7 @@ query request {{
             {
                 Query = $@"
 query request($id:Int!) {{ 
-    teams(ids: [$id]) {{
-        {_optionsBuilder.Build(req.TeamOptions, OptionBuilderMode.Raw)}
-        {_optionsBuilder.Build(req.UserOptions, OptionBuilderMode.Multiple)}
-    }} 
+    {_optionsBuilder.Build(req.TeamOptions, OptionBuilderMode.Multiple, ("ids", "[$id]"))}
 }}",
                 Variables = new
                 {

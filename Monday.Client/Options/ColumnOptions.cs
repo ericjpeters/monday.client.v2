@@ -1,36 +1,39 @@
-﻿using System;
-
-namespace Monday.Client.Options
+﻿namespace Monday.Client.Options
 {
     public interface IColumnOptions : IBaseOptions
     {
+        bool IncludeTitle { get; set; }
+        bool IncludeType { get; set; }
+        bool IncludeIsArchived { get; set; }
+        bool IncludeSettings { get; set; }
     }
-    
+
     public class ColumnOptions : BaseOptions, IColumnOptions
     {
+        public bool IncludeTitle { get; set; } = true;
+        public bool IncludeType { get; set; } = true;
+        public bool IncludeIsArchived { get; set; } = true;
+        public bool IncludeSettings { get; set; } = true;
+
         public ColumnOptions()
-            : base("column", "columns")
+            : base("column")
         {
         }
 
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
         {
-            if (!Include)
-                return String.Empty;
+            var modelName = GetModelName(mode);
+            var modelAttributes = GetModelAttributes(attrs);
 
-            var result = $"id title type archived settings_str";
+            var title = GetField(IncludeTitle, "title");
+            var type = GetField(IncludeType, "type");
+            var archived = GetField(IncludeIsArchived, "archived");
+            var settings = GetField(IncludeSettings, "settings_str");
 
-            switch (mode)
-            {
-                case OptionBuilderMode.Raw:
-                    return result;
-
-                case OptionBuilderMode.Multiple:
-                    return $@"columns {{ {result} }}";
-
-                default:
-                    return $@"column {{ {result} }}";
-            }
+            return $@"
+{modelName}{modelAttributes} {{
+    id {title} {type} {archived} {settings}
+}}";
         }
     }
 }

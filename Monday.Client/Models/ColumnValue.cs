@@ -24,6 +24,8 @@ namespace Monday.Client.Models
         [JsonProperty("value")]
         public string Value { get; set; }
 
+        public string Type { get; set; }
+
         /// <summary>
         ///     The column's textual value in string form.
         /// </summary>

@@ -29,57 +29,26 @@ namespace Monday.Client.Options
         public ColumnOptions ColumnOptions { get; set; } = new ColumnOptions();
 
         public BoardOptions()
-            : base("board", "boards")
+            : base("board")
         { 
         }
 
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
         {
-            if (!Include)
-                return String.Empty;
+            var modelName = GetModelName(mode);
+            var modelAttributes = GetModelAttributes(attrs);
 
-            var model = BaseNameSingular;
-            if (mode == OptionBuilderMode.Multiple)
-                model = BaseNamePlural;
-
-            var attributes = String.Empty;
-            if (attrs != null)
-            {
-                attributes = attrs.Aggregate(String.Empty, (_c, _n) => $",{_n.key}:{_n.val}");
-                if (attributes.Length > 0)
-                    attributes = $"({attributes.Substring(1)})";
-            }
-
-            var name = String.Empty;
-            if (IncludeName)
-                name = "name";
-
-            var description = String.Empty;
-            if (IncludeDescription)
-                description = "description";
-
-            var boardAccessType = String.Empty;
-            if (IncludeBoardAccessType)
-                boardAccessType = "board_kind";
-
-            var boardStateType = String.Empty;
-            if (IncludeBoardStateType)
-                boardStateType = "state";
-
-            var boardFolderId = String.Empty;
-            if (IncludeBoardFolderId)
-                boardFolderId = "board_folder_id";
-
-            var permissions = String.Empty;
-            if (IncludePermissions)
-                permissions = "permissions";
-
-            var columns = String.Empty;
-            if (IncludeColumns)
-                columns = ColumnOptions.Build(OptionBuilderMode.Multiple);
+            var name = GetField(IncludeName, "name");
+            var description = GetField(IncludeDescription, "description");
+            var boardAccessType = GetField(IncludeBoardAccessType, "board_kind");
+            var boardStateType = GetField(IncludeBoardStateType, "state");
+            var boardFolderId = GetField(IncludeBoardFolderId, "board_folder_id");
+            var permissions = GetField(IncludePermissions, "permissions");
+            
+            var columns = GetField(IncludeColumns, ColumnOptions.Build(OptionBuilderMode.Multiple));
 
             return $@"
-{model}{attributes} {{
+{modelName}{modelAttributes} {{
     id {name} {description} {boardAccessType} {boardStateType} {boardFolderId} {permissions} {columns}
 }}";
         }

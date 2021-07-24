@@ -46,13 +46,13 @@ namespace Monday.Client.Options
         public ColumnValueOptions ColumnValueOptions { get; set; } = new ColumnValueOptions();
         public UserOptions CreatorOptions { get; set; } = new UserOptions
         {
-            BaseNameSingular = "creator",
-            BaseNamePlural = "creators"
+            NameSingular = "creator",
+            NamePlural = "creators"
         };
         public UserOptions SubscriberOptions { get; set; } = new UserOptions
         {
-            BaseNameSingular = "subscriber",
-            BaseNamePlural = "subscribers"
+            NameSingular = "subscriber",
+            NamePlural = "subscribers"
         };
 
         public ItemOptions()
@@ -62,59 +62,22 @@ namespace Monday.Client.Options
 
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
         {
-            if (!Include)
-                return String.Empty;
+            var modelName = GetModelName(mode);
+            var modelAttributes = GetModelAttributes(attrs);
 
-            var model = BaseNameSingular;
-            if (mode == OptionBuilderMode.Multiple)
-                model = BaseNamePlural;
+            var name = GetField(IncludeName, "name");
+            var createdAt = GetField(IncludeCreatedAt, "created_at");
+            var creatorId = GetField(IncludeCreatorId, "creator_id");
+            var updatedAt = GetField(IncludeUpdatedAt, "updated_at");
 
-            var attributes = String.Empty;
-            if (attrs != null)
-            {
-                attributes = attrs.Aggregate(String.Empty, (_c, _n) => $",{_n.key}:{_n.val}");
-                if (attributes.Length > 0)
-                    attributes = $"({attributes.Substring(1)})";
-            }
-
-            var name = String.Empty;
-            if (IncludeName)
-                name = $@"name";
-
-            var creatorId = String.Empty;
-            if (IncludeCreatorId)
-                creatorId = $@"creator_id";
-
-            var createdAt = String.Empty;
-            if (IncludeCreatedAt)
-                createdAt = $@"created_at";
-
-            var updatedAt = String.Empty;
-            if (IncludeUpdatedAt)
-                updatedAt = $@"updated_at";
-
-            var creator = String.Empty;
-            if (IncludeCreator)
-                creator = CreatorOptions.Build(OptionBuilderMode.Single);
-
-            var board = String.Empty;
-            if(IncludeBoard)
-                board = BoardOptions.Build(OptionBuilderMode.Single);
-
-            var group = String.Empty;
-            if(IncludeGroup)
-                group = GroupOptions.Build(OptionBuilderMode.Single);
-
-            var columnValues = String.Empty;
-            if(IncludeColumnValues)
-                columnValues = ColumnValueOptions.Build(OptionBuilderMode.Multiple);
-
-            var subscribers = String.Empty;
-            if(IncludeSubscribers)
-                subscribers = SubscriberOptions.Build(OptionBuilderMode.Multiple);
+            var creator = GetField(IncludeCreator, CreatorOptions.Build(OptionBuilderMode.Single));
+            var board = GetField(IncludeBoard, BoardOptions.Build(OptionBuilderMode.Single));
+            var group = GetField(IncludeGroup, GroupOptions.Build(OptionBuilderMode.Single));
+            var columnValues = GetField(IncludeColumnValues, ColumnValueOptions.Build(OptionBuilderMode.Multiple));
+            var subscribers = GetField(IncludeSubscribers, SubscriberOptions.Build(OptionBuilderMode.Multiple));
 
             return $@"
-{model}{attributes} {{
+{modelName}{modelAttributes} {{
     id {name} {creatorId} {createdAt} {updatedAt} {creator} {board} {group} {columnValues} {subscribers}
 }}";
         }

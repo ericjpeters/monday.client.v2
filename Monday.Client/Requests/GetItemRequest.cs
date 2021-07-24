@@ -18,8 +18,8 @@ namespace Monday.Client.Requests
             IncludeColumnValues = true,
             CreatorOptions = new UserOptions
             {
-                BaseNameSingular = "creator",
-                BaseNamePlural = "creators",
+                NameSingular = "creator",
+                NamePlural = "creators",
                 IncludeUrl = false,
                 IncludePhoto = false,
                 IncludeTitle = false,
@@ -48,8 +48,8 @@ namespace Monday.Client.Requests
             IncludeSubscribers = true,
             SubscriberOptions = new UserOptions
             { 
-                BaseNamePlural = "subscribers",
-                BaseNameSingular = "subscriber",
+                NamePlural = "subscribers",
+                NameSingular = "subscriber",
                 IncludeUrl = false,
                 IncludePhoto = false,
                 IncludeTitle = false,

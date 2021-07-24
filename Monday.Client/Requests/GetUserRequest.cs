@@ -6,14 +6,14 @@ namespace Monday.Client.Requests
     {
         int UserId { get; set; }
 
-        UserOptions UserOptions { get; set; }
+        IUserOptions UserOptions { get; set; }
     }
 
     public class GetUserRequest : IGetUserRequest
     {
         public int UserId { get; set; }
 
-        public UserOptions UserOptions { get; set; } = new UserOptions();
+        public IUserOptions UserOptions { get; set; } = new UserOptions();
 
         public GetUserRequest(int userId)
         {

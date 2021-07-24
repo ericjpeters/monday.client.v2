@@ -7,13 +7,13 @@ namespace Monday.Client.Requests
     {
         UserAccessTypes? UserAccessType { get; set; }
 
-        UserOptions UserOptions { get; set; }
+        IUserOptions UserOptions { get; set; }
     }
 
     public class GetUsersRequest : IGetUsersRequest
     {
         public UserAccessTypes? UserAccessType { get; set; }
 
-        public UserOptions UserOptions { get; set; } = new UserOptions();
+        public IUserOptions UserOptions { get; set; } = new UserOptions();
     }
 }
