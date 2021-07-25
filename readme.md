@@ -60,3 +60,16 @@ To help control these limits, we have extended the Monday.Client API to expose q
         UpdatesOptions = new UpdatesOptions {  Include = false }
     });
 ```
+
+* Minimums
+```
+            var options = new GetItemsRequest(boardId, RequestMode.Minimum);
+            options.ItemOptions.IncludeName = true;
+            options.ItemOptions.IncludeGroup = true;
+            options.ItemOptions.GroupOptions.IncludeTitle = true;
+            options.ItemOptions.IncludeColumnValues = true;
+            options.ItemOptions.ColumnValueOptions.IncludeTitle = true;
+            options.ItemOptions.ColumnValueOptions.IncludeText = true;
+
+            var data = await client.GetItems(options);
+```

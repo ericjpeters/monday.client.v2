@@ -36,4 +36,13 @@
 }}";
         }
     }
+
+    public class TopGroupOptions : GroupOptions
+    {
+        public TopGroupOptions()
+        {
+            NameSingular = "top_group";
+            NamePlural = "top_group";
+        }
+    }
 }

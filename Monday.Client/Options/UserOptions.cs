@@ -74,7 +74,17 @@ namespace Monday.Client.Options
         }
     }
 
-    public class CreatorOptions : UserOptions {
+    public class OwnerOptions : UserOptions
+    {
+        public OwnerOptions()
+        {
+            NameSingular = "owner";
+            NamePlural = "owners";
+        }
+    }
+
+    public class CreatorOptions : UserOptions
+    {
         public CreatorOptions()
         {
             NameSingular = "creator";
