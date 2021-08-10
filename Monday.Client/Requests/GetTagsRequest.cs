@@ -1,15 +1,26 @@
-﻿using Monday.Client.Options;
+﻿using Monday.Client.Models;
+using Monday.Client.Options;
+using System.Collections.Generic;
 
 namespace Monday.Client.Requests
 {
-    public interface IGetTagsRequest
+    public interface IGetTagsRequest : IMondayRequest
     {
         int BoardId { get; set; }
 
         ITagOptions TagOptions { get; set; }
     }
 
-    public class GetTagsRequest : IGetTagsRequest
+    public interface IGetTagsResult : IMondayResult
+    {
+        List<Tag> Data { get; }
+    }
+    internal class GetTagsResult : MondayResult, IGetTagsResult
+    {
+        public List<Tag> Data { get; set; }
+    }
+
+    public class GetTagsRequest : MondayRequest, IGetTagsRequest
     {
         public int BoardId { get; set; }
 

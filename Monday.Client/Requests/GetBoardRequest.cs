@@ -1,15 +1,26 @@
-﻿using Monday.Client.Options;
+﻿using Monday.Client.Models;
+using Monday.Client.Options;
 
 namespace Monday.Client.Requests
 {
-    public interface IGetBoardRequest
+    public interface IGetBoardRequest : IMondayRequest
     {
         int BoardId { get; set; }
 
         IBoardOptions BoardOptions { get; set; }
     }
 
-    public class GetBoardRequest  : IGetBoardRequest
+    public interface IGetBoardResult : IMondayResult
+    {
+        Board Data { get; }
+    }
+
+    internal class GetBoardResult : MondayResult, IGetBoardResult
+    {
+        public Board Data { get; set; }
+    }
+
+    public class GetBoardRequest  : MondayRequest, IGetBoardRequest
     {
         public int BoardId { get; set; }
 

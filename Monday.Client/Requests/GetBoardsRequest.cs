@@ -1,15 +1,27 @@
-﻿using Monday.Client.Options;
+﻿using Monday.Client.Models;
+using Monday.Client.Options;
+using System.Collections.Generic;
 
 namespace Monday.Client.Requests
 {
-    public interface IGetBoardsRequest
+    public interface IGetBoardsRequest : IMondayRequest
     {
         int Limit { get; set; }
 
         IBoardOptions BoardOptions { get; set; }
     }
 
-    public class GetBoardsRequest : IGetBoardsRequest
+    public interface IGetBoardsResult : IMondayResult
+    {
+        List<Board> Data { get; }
+    }
+
+    internal class GetBoardsResult : MondayResult, IGetBoardsResult
+    {
+        public List<Board> Data { get; set; }
+    }
+
+    public class GetBoardsRequest : MondayRequest, IGetBoardsRequest
     {
         public int Limit { get; set; } = 100000;
 

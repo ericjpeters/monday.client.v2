@@ -1,15 +1,25 @@
-﻿using Monday.Client.Options;
+﻿using Monday.Client.Models;
+using Monday.Client.Options;
 
 namespace Monday.Client.Requests
 {
-    public interface IGetTeamRequest
+    public interface IGetTeamRequest : IMondayRequest
     {
         int TeamId { get; set; }
 
         ITeamOptions TeamOptions { get; set; } 
     }
 
-    public class GetTeamRequest : IGetTeamRequest
+    public interface IGetTeamResult : IMondayResult
+    {
+        Team Data { get; }
+    }
+    internal class GetTeamResult : MondayResult, IGetTeamResult
+    {
+        public Team Data { get; set; }
+    }
+
+    public class GetTeamRequest : MondayRequest, IGetTeamRequest
     {
         public int TeamId { get; set; }
 

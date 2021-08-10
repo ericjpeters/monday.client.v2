@@ -27,11 +27,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GraphQL.Client" Version="3.2.3" />
-    <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="3.2.3" />
+    <PackageReference Include="GraphQL.Client" Version="3.2.4" />
+    <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="3.2.4" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
     <None Include="..\mit-license.txt">
       <Pack>True</Pack>
       <PackagePath></PackagePath>

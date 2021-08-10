@@ -75,10 +75,10 @@ namespace Monday.Client
         /// <returns></returns>
         public async Task<List<User>> GetUsers()
         {
-            return await GetUsers(new GetUsersRequest());
+            return (await GetUsers(new GetUsersRequest())).Data;
         }
 
-        public async Task<List<User>> GetUsers(IGetUsersRequest req)
+        public async Task<IGetUsersResult> GetUsers(IGetUsersRequest req)
         {
             GraphQLRequest request;
             if (req.UserAccessType.HasValue)
@@ -110,7 +110,10 @@ query {{
 
             ThrowResponseErrors(result.Errors);
 
-            return result.Data.Users;
+            return new GetUsersResult
+            {
+                Data = result.Data.Users
+            };
         }
 
         /// <summary>
@@ -120,9 +123,9 @@ query {{
         /// <returns></returns>
         public async Task<List<User>> GetUsers(UserAccessTypes userAccessType)
         {
-            return await GetUsers(new GetUsersRequest {
+            return (await GetUsers(new GetUsersRequest {
                 UserAccessType = userAccessType
-            });
+            })).Data;
         }
 
         /// <summary>
@@ -132,10 +135,10 @@ query {{
         /// <returns></returns>
         public async Task<User> GetUser(int userId)
         {
-            return await GetUser(new GetUserRequest(userId));
+            return (await GetUser(new GetUserRequest(userId))).Data;
         }
 
-        public async Task<User> GetUser(IGetUserRequest req)
+        public async Task<IGetUserResult> GetUser(IGetUserRequest req)
         {
             var request = new GraphQLRequest
             {
@@ -153,7 +156,10 @@ query request($id:Int) {{
 
             ThrowResponseErrors(result.Errors);
 
-            return result.Data.Users.FirstOrDefault();
+            return new GetUserResult
+            {
+                Data = result.Data.Users.FirstOrDefault()
+            };
         }
 
         /// <summary>
@@ -165,10 +171,10 @@ query request($id:Int) {{
         /// <returns></returns>
         public async Task<List<Board>> GetBoards()
         {
-            return await GetBoards(new GetBoardsRequest());
+            return (await GetBoards(new GetBoardsRequest())).Data;
         }
 
-        public async Task<List<Board>> GetBoards(IGetBoardsRequest req)
+        public async Task<IGetBoardsResult> GetBoards(IGetBoardsRequest req)
         {
             var request = new GraphQLRequest
             {
@@ -182,7 +188,10 @@ query {{
 
             ThrowResponseErrors(result.Errors);
 
-            return result.Data.Boards;
+            return new GetBoardsResult
+            {
+                Data = result.Data.Boards
+            };
         }
 
         /// <summary>
@@ -192,10 +201,10 @@ query {{
         /// <returns></returns>
         public async Task<Board> GetBoard(int boardId)
         {
-            return await GetBoard(new GetBoardRequest(boardId));
+            return (await GetBoard(new GetBoardRequest(boardId))).Data;
         }
 
-        public async Task<Board> GetBoard(IGetBoardRequest req)
+        public async Task<IGetBoardResult> GetBoard(IGetBoardRequest req)
         {
             var request = new GraphQLRequest
             {
@@ -213,7 +222,10 @@ query request($id:Int) {{
 
             ThrowResponseErrors(result.Errors);
 
-            return result.Data.Boards.FirstOrDefault();
+            return new GetBoardResult
+            {
+                Data = result.Data.Boards.FirstOrDefault()
+            };
         }
 
         /// <summary>
@@ -223,10 +235,10 @@ query request($id:Int) {{
         /// <returns></returns>
         public async Task<List<Group>> GetGroups(int boardId)
         {
-            return await GetGroups(new GetGroupsRequest(boardId));
+            return (await GetGroups(new GetGroupsRequest(boardId))).Data;
         }
 
-        public async Task<List<Group>> GetGroups(IGetGroupsRequest req)
+        public async Task<IGetGroupsResult> GetGroups(IGetGroupsRequest req)
         { 
             var request = new GraphQLRequest
             {
@@ -246,7 +258,10 @@ query request($id:Int!) {{
 
             ThrowResponseErrors(result.Errors);
 
-            return result.Data.Boards.FirstOrDefault()?.Groups;
+            return new GetGroupsResult
+            {
+                Data = result.Data.Boards.FirstOrDefault()?.Groups
+            };
         }
 
         /// <summary>
@@ -256,10 +271,10 @@ query request($id:Int!) {{
         /// <returns></returns>
         public async Task<List<Item>> GetItems(int boardId)
         {
-            return await GetItems(new GetItemsRequest(boardId));
+            return (await GetItems(new GetItemsRequest(boardId))).Data;
         }
 
-        public async Task<List<Item>> GetItems(IGetItemsRequest req)
+        public async Task<IGetItemsResult> GetItems(IGetItemsRequest req)
         {
             var query = $@"
 query request($id:Int) {{ 
@@ -281,7 +296,10 @@ query request($id:Int) {{
 
             ThrowResponseErrors(result.Errors);
 
-            return result.Data.Boards.FirstOrDefault()?.Items;
+            return new GetItemsResult
+            {
+                Data = result.Data.Boards.FirstOrDefault()?.Items
+            };
         }
 
         /// <summary>
@@ -291,10 +309,10 @@ query request($id:Int) {{
         /// <returns></returns>
         public async Task<Item> GetItem(int itemId)
         {
-            return await GetItem(new GetItemRequest(itemId));
+            return (await GetItem(new GetItemRequest(itemId))).Data;
         }
 
-        public async Task<Item> GetItem(IGetItemRequest req)
+        public async Task<IGetItemResult> GetItem(IGetItemRequest req)
         {
             var request = new GraphQLRequest
             {
@@ -312,7 +330,10 @@ query request($id:Int) {{
 
             ThrowResponseErrors(result.Errors);
 
-            return result.Data.Items.FirstOrDefault();
+            return new GetItemResult
+            {
+                Data = result.Data.Items.FirstOrDefault()
+            };
         }
 
         /// <summary>
@@ -322,10 +343,10 @@ query request($id:Int) {{
         /// <returns></returns>
         public async Task<List<Tag>> GetTags(int boardId)
         {
-            return await GetTags(new GetTagsRequest(boardId));
+            return (await GetTags(new GetTagsRequest(boardId))).Data;
         }
 
-        public async Task<List<Tag>> GetTags(IGetTagsRequest req)
+        public async Task<IGetTagsResult> GetTags(IGetTagsRequest req)
         {
             var request = new GraphQLRequest
             {
@@ -345,7 +366,10 @@ query request($id:Int!) {{
 
             ThrowResponseErrors(result.Errors);
 
-            return result.Data.Boards.FirstOrDefault()?.Tags;
+            return new GetTagsResult
+            {
+                Data = result.Data.Boards.FirstOrDefault()?.Tags
+            };
         }
 
         /// <summary>
@@ -355,10 +379,10 @@ query request($id:Int!) {{
         /// <returns></returns>
         public async Task<Tag> GetTag(int tagId)
         {
-            return await GetTag(new GetTagRequest(tagId));
+            return (await GetTag(new GetTagRequest(tagId))).Data;
         }
 
-        public async Task<Tag> GetTag(IGetTagRequest req)
+        public async Task<IGetTagResult> GetTag(IGetTagRequest req)
         {
             var request = new GraphQLRequest
             {
@@ -376,7 +400,10 @@ query request($id:Int!) {{
 
             ThrowResponseErrors(result.Errors);
 
-            return result.Data.Tags.FirstOrDefault();
+            return new GetTagResult
+            {
+                Data = result.Data.Tags.FirstOrDefault()
+            };
         }
 
         /// <summary>
@@ -385,10 +412,10 @@ query request($id:Int!) {{
         /// <returns></returns>
         public async Task<List<Team>> GetTeams()
         {
-            return await GetTeams(new GetTeamsRequest());
+            return (await GetTeams(new GetTeamsRequest())).Data;
         }
 
-        public async Task<List<Team>> GetTeams(IGetTeamsRequest req)
+        public async Task<IGetTeamsResult> GetTeams(IGetTeamsRequest req)
         {
             var request = new GraphQLRequest
             {
@@ -402,7 +429,10 @@ query request {{
 
             ThrowResponseErrors(result.Errors);
 
-            return result.Data.Teams;
+            return new GetTeamsResult
+            {
+                Data = result.Data.Teams
+            };
         }
 
         /// <summary>
@@ -411,10 +441,10 @@ query request {{
         /// <returns></returns>
         public async Task<Team> GetTeam(int teamId)
         {
-            return await GetTeam(new GetTeamRequest(teamId));
+            return (await GetTeam(new GetTeamRequest(teamId))).Data;
         }
 
-        public async Task<Team> GetTeam(IGetTeamRequest req)
+        public async Task<IGetTeamResult> GetTeam(IGetTeamRequest req)
         {
             var request = new GraphQLRequest
             {
@@ -432,7 +462,10 @@ query request($id:Int!) {{
 
             ThrowResponseErrors(result.Errors);
 
-            return result.Data.Teams.FirstOrDefault();
+            return new GetTeamResult
+            {
+                Data = result.Data.Teams.FirstOrDefault()
+            };
         }
 
         /// <summary>
@@ -602,6 +635,7 @@ query request($id:Int!) {{
         ///     Archives a group in a specific board.
         /// </summary>
         /// <param name="boardId">The board’s unique identifier.</param>
+        /// <param name="groupId">The board’s group identifier.</param>
         /// <returns></returns>
         public async Task<bool> ArchiveGroup(int boardId, string groupId)
         {

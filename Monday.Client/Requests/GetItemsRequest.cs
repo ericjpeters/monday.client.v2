@@ -1,8 +1,10 @@
-﻿using Monday.Client.Options;
+﻿using Monday.Client.Models;
+using Monday.Client.Options;
+using System.Collections.Generic;
 
 namespace Monday.Client.Requests
 {
-    public interface IGetItemsRequest
+    public interface IGetItemsRequest : IMondayRequest
     {
         int BoardId { get; set; }
         int Limit { get; set; }
@@ -10,7 +12,16 @@ namespace Monday.Client.Requests
         IItemOptions ItemOptions { get; set; }
     }
 
-    public class GetItemsRequest : IGetItemsRequest
+    public interface IGetItemsResult : IMondayResult
+    {
+        List<Item> Data { get; }
+    }
+    internal class GetItemsResult : MondayResult, IGetItemsResult
+    {
+        public List<Item> Data { get; set; }
+    }
+
+    public class GetItemsRequest : MondayRequest, IGetItemsRequest
     {
         public int BoardId { get; set; }
 
