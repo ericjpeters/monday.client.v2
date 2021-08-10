@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Monday.Client.Requests;
+using System;
 using System.Linq;
 
 namespace Monday.Client.Options
@@ -52,8 +53,149 @@ namespace Monday.Client.Options
         };
 
         public ItemOptions()
+            : this(RequestMode.Default)
+        { 
+        }
+
+        public ItemOptions(RequestMode mode)
             : base("item", "items")
         {
+            switch (mode)
+            {
+                case RequestMode.Minimum:
+                    IncludeBoard = false;
+                    IncludeGroup = false;
+                    IncludeColumnValues = false;
+                    IncludeName = false;
+                    IncludeCreatorId = false;
+                    IncludeCreatedAt = false;
+                    IncludeUpdatedAt = false;
+                    IncludeCreator = false;
+                    IncludeSubscribers = false;
+                    break;
+
+                case RequestMode.Maximum:
+                    IncludeBoard = true;
+                    IncludeGroup = true;
+                    IncludeColumnValues = true;
+                    IncludeName = true;
+                    IncludeCreatorId = true;
+                    IncludeCreatedAt = true;
+                    IncludeUpdatedAt = true;
+                    IncludeCreator = true;
+                    IncludeSubscribers = true;
+                    BoardOptions = new BoardOptions
+                    {
+                        IncludeName = true,
+                        IncludeDescription = true,
+                        IncludeBoardAccessType = true,
+                        IncludeBoardStateType = true,
+                        IncludeBoardFolderId = true,
+                        IncludePermissions = true,
+                        IncludeColumns = false
+                    };
+                    GroupOptions = new GroupOptions
+                    {
+                        IncludeTitle = true,
+                        IncludeColor = true,
+                        IncludeIsArchived = true,
+                        IncludeIsDeleted = true,
+                    };
+                    ColumnValueOptions = new ColumnValueOptions
+                    {
+                        IncludeTitle = true,
+                        IncludeValue = true,
+                        IncludeType = true,
+                        IncludeText = true,
+                        IncludeAdditionalInfo = true
+                    };
+                    CreatorOptions = new CreatorOptions
+                    {
+                        IncludeName = true,
+                        IncludeEmail = true,
+                        IncludeUrl = true,
+                        IncludePhoto = true,
+                        IncludeTitle = true,
+                        IncludeBirthday = true,
+                        IncludeCountryCode = true,
+                        IncludeLocation = true,
+                        IncludeTimeZoneIdentifier = true,
+                        IncludePhone = true,
+                        IncludeMobilePhone = true,
+                        IncludeIsGuest = true,
+                        IncludeIsPending = true,
+                        IncludeIsEnabled = true,
+                        IncludeCreatedAt = true
+                    };
+                    SubscriberOptions = new SubscriberOptions
+                    {
+                        IncludeName = true,
+                        IncludeEmail = true,
+                        IncludeUrl = true,
+                        IncludePhoto = true,
+                        IncludeTitle = true,
+                        IncludeBirthday = true,
+                        IncludeCountryCode = true,
+                        IncludeLocation = true,
+                        IncludeTimeZoneIdentifier = true,
+                        IncludePhone = true,
+                        IncludeMobilePhone = true,
+                        IncludeIsGuest = true,
+                        IncludeIsPending = true,
+                        IncludeIsEnabled = true,
+                        IncludeCreatedAt = true
+                    };
+                    break;
+
+                case RequestMode.Default:
+                default:
+                    IncludeColumnValues = true;
+                    CreatorOptions = new CreatorOptions
+                    {
+                        IncludeUrl = false,
+                        IncludePhoto = false,
+                        IncludeTitle = false,
+                        IncludeBirthday = false,
+                        IncludeCountryCode = false,
+                        IncludeLocation = false,
+                        IncludeTimeZoneIdentifier = false,
+                        IncludePhone = false,
+                        IncludeMobilePhone = false,
+                        IncludeIsGuest = false,
+                        IncludeIsPending = false,
+                        IncludeIsEnabled = false,
+                        IncludeCreatedAt = false
+                    };
+                    IncludeBoard = true;
+                    BoardOptions = new BoardOptions
+                    {
+                        IncludeBoardStateType = true,
+                        IncludeBoardFolderId = true
+                    };
+                    IncludeGroup = true;
+                    GroupOptions = new GroupOptions
+                    {
+                        IncludeColor = true
+                    };
+                    IncludeSubscribers = true;
+                    SubscriberOptions = new SubscriberOptions
+                    {
+                        IncludeUrl = false,
+                        IncludePhoto = false,
+                        IncludeTitle = false,
+                        IncludeBirthday = false,
+                        IncludeCountryCode = false,
+                        IncludeLocation = false,
+                        IncludeTimeZoneIdentifier = false,
+                        IncludePhone = false,
+                        IncludeMobilePhone = false,
+                        IncludeIsGuest = false,
+                        IncludeIsPending = false,
+                        IncludeIsEnabled = false,
+                        IncludeCreatedAt = false
+                    };
+                    break;
+            }
         }
 
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)

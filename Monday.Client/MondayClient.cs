@@ -276,30 +276,65 @@ query request($id:Int!) {{
 
         public async Task<IGetItemsResult> GetItems(IGetItemsRequest req)
         {
-            var query = $@"
+            if (String.IsNullOrWhiteSpace(req.FilterColumnName) || String.IsNullOrWhiteSpace(req.FilterColumnValue))
+            {
+                var query = $@"
 query request($id:Int) {{ 
     boards(ids:[$id]) {{ 
         {_optionsBuilder.Build(req.ItemOptions, OptionBuilderMode.Multiple, ("limit", req.Limit))}
     }} 
 }}";
 
-            var request = new GraphQLRequest
-            {
-                Query = query,
-                Variables = new
+                var request = new GraphQLRequest
                 {
-                    id = req.BoardId
-                }
-            };
+                    Query = query,
+                    Variables = new
+                    {
+                        id = req.BoardId
+                    }
+                };
 
-            var result = await _graphQlHttpClient.SendQueryAsync<GetBoardItemsResponse>(request);
+                var result = await _graphQlHttpClient.SendQueryAsync<GetBoardItemsResponse>(request);
 
-            ThrowResponseErrors(result.Errors);
+                ThrowResponseErrors(result.Errors);
 
-            return new GetItemsResult
+                return new GetItemsResult
+                {
+                    Data = result.Data.Boards.FirstOrDefault()?.Items
+                };
+            }
+            else
             {
-                Data = result.Data.Boards.FirstOrDefault()?.Items
-            };
+                var query = $@"
+query request($id:Int) {{ 
+    items_by_column_values ( 
+        board_id: {req.BoardId},
+        column_id: ""{req.FilterColumnName}"",
+        column_value: ""{req.FilterColumnValue}"",
+        {((req.FilterState.HasValue && (req.FilterState.Value == StateFilter.Active))? "state: active" : String.Empty)}
+    ) {{
+        {_optionsBuilder.Build(req.ItemOptions, OptionBuilderMode.Multiple, ("limit", req.Limit))}
+    }}
+}}";
+
+                var request = new GraphQLRequest
+                {
+                    Query = query,
+                    Variables = new
+                    {
+                        id = req.BoardId
+                    }
+                };
+
+                var result = await _graphQlHttpClient.SendQueryAsync<GetItemsResponse>(request);
+
+                ThrowResponseErrors(result.Errors);
+
+                return new GetItemsResult
+                {
+                    Data = result.Data.Items
+                };
+            }
         }
 
         /// <summary>
@@ -688,15 +723,40 @@ query request($id:Int!) {{
         /// <returns></returns>
         public async Task<int> CreateItem(CreateItem createItem)
         {
+            return (await CreateItem(new CreateItemRequest { 
+                Name = createItem.Name,
+                BoardId = createItem.BoardId,
+                GroupId = createItem.GroupId,
+                ColumnValues = new MondayColumns(createItem.ColumnValues)
+            })).Data.Id;
+        }
+
+        public async Task<ICreateItemResult> CreateItem(ICreateItemRequest createItem)
+        {
             var request = new GraphQLRequest
             {
-                Query = @"mutation request($boardId:Int! $groupId:String $name:String $columnValues:JSON) { create_item (board_id: $boardId, group_id: $groupId, item_name: $name, column_values: $columnValues) { id } }",
+                Query = $@"
+mutation request(
+    $boardId:Int! 
+    $groupId:String 
+    $name:String 
+    $columnValues:JSON
+) {{ 
+    create_item (
+        board_id: $boardId, 
+        group_id: $groupId, 
+        item_name: $name, 
+        column_values: $columnValues
+    ) {{
+        id 
+    }} 
+}}",
                 Variables = new
                 {
                     boardId = createItem.BoardId,
                     groupId = createItem.GroupId,
                     name = createItem.Name,
-                    columnValues = createItem.ColumnValues
+                    columnValues = createItem.ColumnValues.ToString()
                 }
             };
 
@@ -704,7 +764,10 @@ query request($id:Int!) {{
 
             ThrowResponseErrors(result.Errors);
 
-            return result.Data.Item.Id;
+            return new CreateItemResult
+            {
+                Data = result.Data.Item
+            };
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Monday.Client.Requests;
+using System;
 
 namespace Monday.Client.Options
 {
@@ -22,6 +23,38 @@ namespace Monday.Client.Options
         public ColumnValueOptions()
             : base("column_value")
         {
+        }
+
+        public ColumnValueOptions(RequestMode mode)
+            : this()
+        {
+            switch (mode)
+            {
+                case RequestMode.Minimum:
+                    IncludeTitle = false;
+                    IncludeValue = false;
+                    IncludeType = false;
+                    IncludeText = false;
+                    IncludeAdditionalInfo = false;
+                    break;
+
+                case RequestMode.Maximum:
+                    IncludeTitle = true;
+                    IncludeValue = true;
+                    IncludeType = true;
+                    IncludeText = true;
+                    IncludeAdditionalInfo = true;
+                    break;
+
+                case RequestMode.Default:
+                default:
+                    IncludeTitle = true;
+                    IncludeValue = true;
+                    IncludeType = true;
+                    IncludeText = true;
+                    IncludeAdditionalInfo = true;
+                    break;
+            }
         }
 
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
