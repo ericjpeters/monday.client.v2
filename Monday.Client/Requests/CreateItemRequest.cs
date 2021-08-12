@@ -1,4 +1,5 @@
 ﻿using Monday.Client.Models;
+using Monday.Client.Options;
 using System.Collections.Generic;
 
 namespace Monday.Client.Requests
@@ -17,6 +18,19 @@ namespace Monday.Client.Requests
         public int BoardId { get; set; }
         public string GroupId { get; set; }
         public IMondayColumns ColumnValues { get; set; }
+
+        public ColumnOptions ColumnOptions { get; set; }
+
+        public CreateItemRequest()
+        {
+            ColumnOptions = new ColumnOptions(RequestMode.Default);
+        }
+
+        public CreateItemRequest(RequestMode mode)
+            : this()
+        {
+            ColumnOptions = new ColumnOptions(mode);
+        }
     }
 
     public interface ICreateItemResult : IMondayResult

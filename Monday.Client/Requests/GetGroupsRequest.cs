@@ -28,43 +28,15 @@ namespace Monday.Client.Requests
         public IGroupOptions GroupOptions { get; set; }
 
         public GetGroupsRequest(int boardId)
-            : this(boardId, RequestMode.Default)
         {
+            BoardId = boardId;
+
+            GroupOptions = new GroupOptions(RequestMode.Default);
         }
 
         public GetGroupsRequest(int boardId, RequestMode mode)
         {
-            BoardId = boardId;
-
-            switch(mode)
-            {
-                case RequestMode.Minimum:
-                    GroupOptions = new GroupOptions
-                    {
-                        IncludeTitle = false,
-                        IncludeColor = false,
-                        IncludeIsArchived = false,
-                        IncludeIsDeleted = false
-                    };
-                    break;
-
-                case RequestMode.Maximum:
-                    GroupOptions = new GroupOptions
-                    {
-                        IncludeTitle = true,
-                        IncludeColor = true,
-                        IncludeIsArchived = true,
-                        IncludeIsDeleted = true
-                    };
-                    break;
-
-                default:
-                    GroupOptions = new GroupOptions
-                    {
-                        IncludeColor = true
-                    };
-                    break;
-            }
+            GroupOptions = new GroupOptions(mode);
         }
     }
 }

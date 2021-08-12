@@ -1,6 +1,4 @@
 ﻿using Monday.Client.Requests;
-using System;
-using System.Linq;
 
 namespace Monday.Client.Options
 {
@@ -25,32 +23,21 @@ namespace Monday.Client.Options
 
     public class ItemOptions : BaseOptions, IItemOptions
     {
-        public bool IncludeBoard { get; set; } = false;
-        public bool IncludeGroup { get; set; } = false;
-        public bool IncludeColumnValues { get; set; } = false;
-        public bool IncludeName { get; set; } = true;
-        public bool IncludeCreatorId { get; set; } = true;
-        public bool IncludeCreatedAt { get; set; } = true;
-        public bool IncludeUpdatedAt { get; set; } = true;
-        public bool IncludeCreator { get; set; } = true;
-        public bool IncludeSubscribers { get; set; } = false;
+        public bool IncludeBoard { get; set; }
+        public bool IncludeGroup { get; set; }
+        public bool IncludeColumnValues { get; set; }
+        public bool IncludeName { get; set; }
+        public bool IncludeCreatorId { get; set; }
+        public bool IncludeCreatedAt { get; set; }
+        public bool IncludeUpdatedAt { get; set; }
+        public bool IncludeCreator { get; set; }
+        public bool IncludeSubscribers { get; set; }
 
-        public BoardOptions BoardOptions { get; set; } = new BoardOptions
-        {
-            IncludeBoardStateType = true,
-            IncludeBoardFolderId = true
-        };
-        public GroupOptions GroupOptions { get; set; } = new GroupOptions
-        {
-            IncludeColor = true
-        };
-        public ColumnValueOptions ColumnValueOptions { get; set; } = new ColumnValueOptions();
-        public CreatorOptions CreatorOptions { get; set; } = new CreatorOptions
-        {
-        };
-        public SubscriberOptions SubscriberOptions { get; set; } = new SubscriberOptions
-        {
-        };
+        public BoardOptions BoardOptions { get; set; }
+        public GroupOptions GroupOptions { get; set; }
+        public ColumnValueOptions ColumnValueOptions { get; set; }
+        public CreatorOptions CreatorOptions { get; set; } 
+        public SubscriberOptions SubscriberOptions { get; set; }
 
         public ItemOptions()
             : this(RequestMode.Default)
@@ -72,6 +59,11 @@ namespace Monday.Client.Options
                     IncludeUpdatedAt = false;
                     IncludeCreator = false;
                     IncludeSubscribers = false;
+                    BoardOptions = null;
+                    GroupOptions = null;
+                    ColumnValueOptions = null;
+                    CreatorOptions = null;
+                    SubscriberOptions = null;
                     break;
 
                 case RequestMode.Maximum:
@@ -84,115 +76,74 @@ namespace Monday.Client.Options
                     IncludeUpdatedAt = true;
                     IncludeCreator = true;
                     IncludeSubscribers = true;
-                    BoardOptions = new BoardOptions
-                    {
-                        IncludeName = true,
-                        IncludeDescription = true,
-                        IncludeBoardAccessType = true,
-                        IncludeBoardStateType = true,
-                        IncludeBoardFolderId = true,
-                        IncludePermissions = true,
-                        IncludeColumns = false
-                    };
-                    GroupOptions = new GroupOptions
-                    {
-                        IncludeTitle = true,
-                        IncludeColor = true,
-                        IncludeIsArchived = true,
-                        IncludeIsDeleted = true,
-                    };
-                    ColumnValueOptions = new ColumnValueOptions
-                    {
-                        IncludeTitle = true,
-                        IncludeValue = true,
-                        IncludeType = true,
-                        IncludeText = true,
-                        IncludeAdditionalInfo = true
-                    };
-                    CreatorOptions = new CreatorOptions
-                    {
-                        IncludeName = true,
-                        IncludeEmail = true,
-                        IncludeUrl = true,
-                        IncludePhoto = true,
-                        IncludeTitle = true,
-                        IncludeBirthday = true,
-                        IncludeCountryCode = true,
-                        IncludeLocation = true,
-                        IncludeTimeZoneIdentifier = true,
-                        IncludePhone = true,
-                        IncludeMobilePhone = true,
-                        IncludeIsGuest = true,
-                        IncludeIsPending = true,
-                        IncludeIsEnabled = true,
-                        IncludeCreatedAt = true
-                    };
-                    SubscriberOptions = new SubscriberOptions
-                    {
-                        IncludeName = true,
-                        IncludeEmail = true,
-                        IncludeUrl = true,
-                        IncludePhoto = true,
-                        IncludeTitle = true,
-                        IncludeBirthday = true,
-                        IncludeCountryCode = true,
-                        IncludeLocation = true,
-                        IncludeTimeZoneIdentifier = true,
-                        IncludePhone = true,
-                        IncludeMobilePhone = true,
-                        IncludeIsGuest = true,
-                        IncludeIsPending = true,
-                        IncludeIsEnabled = true,
-                        IncludeCreatedAt = true
-                    };
+                    BoardOptions = new BoardOptions(RequestMode.MaximumChild);
+                    GroupOptions = new GroupOptions(RequestMode.MaximumChild);
+                    ColumnValueOptions = new ColumnValueOptions(RequestMode.MaximumChild);
+                    CreatorOptions = new CreatorOptions(RequestMode.MaximumChild);
+                    SubscriberOptions = new SubscriberOptions(RequestMode.MaximumChild);
+                    break;
+
+                case RequestMode.MaximumChild:
+                    IncludeBoard = false;
+                    IncludeGroup = false;
+                    IncludeColumnValues = false;
+                    IncludeName = true;
+                    IncludeCreatorId = true;
+                    IncludeCreatedAt = true;
+                    IncludeUpdatedAt = true;
+                    IncludeCreator = false;
+                    IncludeSubscribers = false;
+                    BoardOptions = null;
+                    GroupOptions = null;
+                    ColumnValueOptions = null;
+                    CreatorOptions = null;
+                    SubscriberOptions = null;
                     break;
 
                 case RequestMode.Default:
                 default:
-                    IncludeColumnValues = true;
-                    CreatorOptions = new CreatorOptions
-                    {
-                        IncludeUrl = false,
-                        IncludePhoto = false,
-                        IncludeTitle = false,
-                        IncludeBirthday = false,
-                        IncludeCountryCode = false,
-                        IncludeLocation = false,
-                        IncludeTimeZoneIdentifier = false,
-                        IncludePhone = false,
-                        IncludeMobilePhone = false,
-                        IncludeIsGuest = false,
-                        IncludeIsPending = false,
-                        IncludeIsEnabled = false,
-                        IncludeCreatedAt = false
-                    };
                     IncludeBoard = true;
-                    BoardOptions = new BoardOptions
+                    IncludeGroup = true;
+                    IncludeColumnValues = true;
+                    IncludeName = true;
+                    IncludeCreatorId = true;
+                    IncludeCreatedAt = true;
+                    IncludeUpdatedAt = true;
+                    IncludeCreator = true;
+                    IncludeSubscribers = true;
+
+                    ColumnValueOptions = new ColumnValueOptions(RequestMode.Minimum)
+                    { 
+                        IncludeText = true,
+                        IncludeTitle = true,
+                        IncludeType = true,
+                        IncludeAdditionalInfo = true,
+                        IncludeValue = true
+                    };
+                    CreatorOptions = new CreatorOptions(RequestMode.Minimum)
+                    {
+                        IncludeEmail = true,
+                        IncludeName = true
+                    };
+                    BoardOptions = new BoardOptions(RequestMode.Minimum)
                     {
                         IncludeBoardStateType = true,
-                        IncludeBoardFolderId = true
+                        IncludeBoardFolderId = true,
+                        IncludeName = true,
+                        IncludeDescription = true,
+                        IncludeBoardAccessType = true
                     };
-                    IncludeGroup = true;
-                    GroupOptions = new GroupOptions
+                    GroupOptions = new GroupOptions(RequestMode.Minimum)
                     {
-                        IncludeColor = true
+                        IncludeColor = true,
+                        IncludeTitle = true,
+                        IncludeIsArchived = true,
+                        IncludeIsDeleted = true
                     };
-                    IncludeSubscribers = true;
-                    SubscriberOptions = new SubscriberOptions
-                    {
-                        IncludeUrl = false,
-                        IncludePhoto = false,
-                        IncludeTitle = false,
-                        IncludeBirthday = false,
-                        IncludeCountryCode = false,
-                        IncludeLocation = false,
-                        IncludeTimeZoneIdentifier = false,
-                        IncludePhone = false,
-                        IncludeMobilePhone = false,
-                        IncludeIsGuest = false,
-                        IncludeIsPending = false,
-                        IncludeIsEnabled = false,
-                        IncludeCreatedAt = false
+                    SubscriberOptions = new SubscriberOptions(RequestMode.Minimum)
+                    { 
+                        IncludeName = true,
+                        IncludeEmail = true
                     };
                     break;
             }
@@ -208,11 +159,11 @@ namespace Monday.Client.Options
             var creatorId = GetField(IncludeCreatorId, "creator_id");
             var updatedAt = GetField(IncludeUpdatedAt, "updated_at");
 
-            var creator = GetField(IncludeCreator, CreatorOptions.Build(OptionBuilderMode.Single));
-            var board = GetField(IncludeBoard, BoardOptions.Build(OptionBuilderMode.Single));
-            var group = GetField(IncludeGroup, GroupOptions.Build(OptionBuilderMode.Single));
-            var columnValues = GetField(IncludeColumnValues, ColumnValueOptions.Build(OptionBuilderMode.Multiple));
-            var subscribers = GetField(IncludeSubscribers, SubscriberOptions.Build(OptionBuilderMode.Multiple));
+            var creator = GetField(IncludeCreator, CreatorOptions?.Build(OptionBuilderMode.Single));
+            var board = GetField(IncludeBoard, BoardOptions?.Build(OptionBuilderMode.Single));
+            var group = GetField(IncludeGroup, GroupOptions?.Build(OptionBuilderMode.Single));
+            var columnValues = GetField(IncludeColumnValues, ColumnValueOptions?.Build(OptionBuilderMode.Multiple));
+            var subscribers = GetField(IncludeSubscribers, SubscriberOptions?.Build(OptionBuilderMode.Multiple));
 
             return $@"
 {modelName}{modelAttributes} {{

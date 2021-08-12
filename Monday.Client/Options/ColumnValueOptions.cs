@@ -1,5 +1,4 @@
 ﻿using Monday.Client.Requests;
-using System;
 
 namespace Monday.Client.Options
 {
@@ -14,19 +13,19 @@ namespace Monday.Client.Options
 
     public class ColumnValueOptions : BaseOptions, IColumnValuesOptions
     {
-        public bool IncludeTitle { get; set; } = true;
-        public bool IncludeValue { get; set; } = true;
-        public bool IncludeType { get; set; } = true;
-        public bool IncludeText { get; set; } = true;
-        public bool IncludeAdditionalInfo { get; set; } = true;
+        public bool IncludeTitle { get; set; }
+        public bool IncludeValue { get; set; }
+        public bool IncludeType { get; set; }
+        public bool IncludeText { get; set; }
+        public bool IncludeAdditionalInfo { get; set; }
 
         public ColumnValueOptions()
-            : base("column_value")
-        {
+            : this(RequestMode.Default)
+        { 
         }
 
         public ColumnValueOptions(RequestMode mode)
-            : this()
+            : base("column_value")
         {
             switch (mode)
             {
@@ -39,6 +38,7 @@ namespace Monday.Client.Options
                     break;
 
                 case RequestMode.Maximum:
+                case RequestMode.MaximumChild:
                     IncludeTitle = true;
                     IncludeValue = true;
                     IncludeType = true;

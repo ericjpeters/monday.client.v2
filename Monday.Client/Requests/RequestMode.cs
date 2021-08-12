@@ -4,6 +4,7 @@
     {
         Default,
         Minimum,
-        Maximum
+        Maximum,
+        MaximumChild
     }
 }

@@ -27,59 +27,16 @@ namespace Monday.Client.Requests
         public IBoardOptions BoardOptions { get; set; } 
 
         public GetBoardRequest(int boardId)
-            : this(boardId, RequestMode.Default)
-        {
-        }
-
-        public GetBoardRequest(int boardId, RequestMode mode)
         {
             BoardId = boardId;
 
-            switch (mode)
-            {
-                case RequestMode.Minimum:
-                    BoardOptions = new BoardOptions
-                    {
-                        IncludeName = false,
-                        IncludeDescription = false,
-                        IncludeBoardAccessType = false,
-                        IncludeBoardStateType = false,
-                        IncludeBoardFolderId = false,
-                        IncludeColumns = false,
-                        IncludePermissions = false
-                    };
-                    break;
+            BoardOptions = new BoardOptions(RequestMode.Default);
+        }
 
-                case RequestMode.Maximum:
-                    BoardOptions = new BoardOptions
-                    {
-                        IncludeName = true,
-                        IncludeDescription = true,
-                        IncludeBoardAccessType = true,
-                        IncludeBoardStateType = true,
-                        IncludeBoardFolderId = true,
-                        IncludeColumns = true,
-                        IncludePermissions = true,
-                        ColumnOptions = new ColumnOptions
-                        {
-                            IncludeTitle = true,
-                            IncludeType = true,
-                            IncludeIsArchived = true,
-                            IncludeSettings = true
-                        }
-                    };
-                    break;
-
-                default:
-                    BoardOptions = new BoardOptions
-                    {
-                        IncludeBoardStateType = true,
-                        IncludeBoardFolderId = true,
-                        IncludePermissions = true,
-                        IncludeColumns = true
-                    };
-                    break;
-            }
+        public GetBoardRequest(int boardId, RequestMode mode)
+            : this(boardId)
+        {
+            BoardOptions = new BoardOptions(mode);
         }
     }
 }

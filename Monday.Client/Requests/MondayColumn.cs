@@ -25,7 +25,7 @@ namespace Monday.Client.Requests
     {
         public string Name { get; set; }
         public string Value { get; set; }
-        public MondayColumnDataType DataType { get; set; }
+        public MondayColumnDataType DataType { get; set; } = MondayColumnDataType.Text;
     }
 
     public class MondayColumns : IMondayColumns

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using Monday.Client.Requests;
 
 namespace Monday.Client.Options
 {
@@ -24,25 +23,87 @@ namespace Monday.Client.Options
 
     public class UserOptions : BaseOptions, IUserOptions
     {
-        public bool IncludeName { get; set; } = true;
-        public bool IncludeEmail { get; set; } = true;
-        public bool IncludeUrl { get; set; } = true;
-        public bool IncludePhoto { get; set; } = true;
-        public bool IncludeTitle { get; set; } = true;
-        public bool IncludeBirthday { get; set; } = true;
-        public bool IncludeCountryCode { get; set; } = true;
-        public bool IncludeLocation { get; set; } = true;
-        public bool IncludeTimeZoneIdentifier { get; set; } = true;
-        public bool IncludePhone { get; set; } = true;
-        public bool IncludeMobilePhone { get; set; } = true;
-        public bool IncludeIsGuest { get; set; } = true;
-        public bool IncludeIsPending { get; set; } = true;
-        public bool IncludeIsEnabled { get; set; } = true;
-        public bool IncludeCreatedAt { get; set; } = true;
+        public bool IncludeName { get; set; }
+        public bool IncludeEmail { get; set; }
+        public bool IncludeUrl { get; set; }
+        public bool IncludePhoto { get; set; }
+        public bool IncludeTitle { get; set; }
+        public bool IncludeBirthday { get; set; }
+        public bool IncludeCountryCode { get; set; }
+        public bool IncludeLocation { get; set; }
+        public bool IncludeTimeZoneIdentifier { get; set; }
+        public bool IncludePhone { get; set; }
+        public bool IncludeMobilePhone { get; set; }
+        public bool IncludeIsGuest { get; set; }
+        public bool IncludeIsPending { get; set; }
+        public bool IncludeIsEnabled { get; set; }
+        public bool IncludeCreatedAt { get; set; }
 
         public UserOptions()
+            : this(RequestMode.Default)
+        { 
+        }
+
+        public UserOptions(RequestMode mode)
             : base("user")
         {
+            switch (mode)
+            {
+                case RequestMode.Minimum:
+                    IncludeName = false;
+                    IncludeEmail = false;
+                    IncludeUrl = false;
+                    IncludePhoto = false;
+                    IncludeTitle = false;
+                    IncludeBirthday = false;
+                    IncludeCountryCode = false;
+                    IncludeLocation = false;
+                    IncludeTimeZoneIdentifier = false;
+                    IncludePhone = false;
+                    IncludeMobilePhone = false;
+                    IncludeIsGuest = false;
+                    IncludeIsPending = false;
+                    IncludeIsEnabled = false;
+                    IncludeCreatedAt = false;
+                    break;
+
+                case RequestMode.Maximum:
+                case RequestMode.MaximumChild:
+                    IncludeName = true;
+                    IncludeEmail = true;
+                    IncludeUrl = true;
+                    IncludePhoto = true;
+                    IncludeTitle = true;
+                    IncludeBirthday = true;
+                    IncludeCountryCode = true;
+                    IncludeLocation = true;
+                    IncludeTimeZoneIdentifier = true;
+                    IncludePhone = true;
+                    IncludeMobilePhone = true;
+                    IncludeIsGuest = true;
+                    IncludeIsPending = true;
+                    IncludeIsEnabled = true;
+                    IncludeCreatedAt = true;
+                    break;
+
+                default:
+                    IncludeName = true;
+                    IncludeEmail = true;
+                    IncludeUrl = true;
+                    IncludePhoto = true;
+                    IncludeTitle = true;
+                    IncludeBirthday = true;
+                    IncludeCountryCode = true;
+                    IncludeLocation = true;
+                    IncludeTimeZoneIdentifier = true;
+                    IncludePhone = true;
+                    IncludeMobilePhone = true;
+                    IncludeIsGuest = true;
+                    IncludeIsPending = true;
+                    IncludeIsEnabled = true;
+                    IncludeCreatedAt = true;
+                    break;
+            }
         }
 
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
@@ -77,6 +138,12 @@ namespace Monday.Client.Options
     public class OwnerOptions : UserOptions
     {
         public OwnerOptions()
+            : this(RequestMode.Default)
+        {
+        }
+
+        public OwnerOptions(RequestMode mode)
+            : base(mode)
         {
             NameSingular = "owner";
             NamePlural = "owners";
@@ -86,6 +153,12 @@ namespace Monday.Client.Options
     public class CreatorOptions : UserOptions
     {
         public CreatorOptions()
+            : this(RequestMode.Default)
+        {
+        }
+
+        public CreatorOptions(RequestMode mode)
+            : base(mode)
         {
             NameSingular = "creator";
             NamePlural = "creators";
@@ -95,6 +168,12 @@ namespace Monday.Client.Options
     public class SubscriberOptions : UserOptions
     {
         public SubscriberOptions()
+            : this(RequestMode.Default)
+        { 
+        }
+        
+        public SubscriberOptions(RequestMode mode)
+            : base(mode)
         {
             NameSingular = "subscriber";
             NamePlural = "subscribers";

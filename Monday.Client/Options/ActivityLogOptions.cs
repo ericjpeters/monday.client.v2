@@ -1,4 +1,6 @@
-﻿namespace Monday.Client.Options
+﻿using Monday.Client.Requests;
+
+namespace Monday.Client.Options
 {
     public interface IActivityLogOptions : IBaseOptions
     {
@@ -12,16 +14,52 @@
 
     public class ActivityLogOptions : BaseOptions, IActivityLogOptions
     {
-        public bool IncludeAccountId { get; set; } = false;
-        public bool IncludeCreatedAt { get; set; } = false;
-        public bool IncludeData { get; set; } = true;
-        public bool IncludeEntity { get; set; } = false;
-        public bool IncludeEvent { get; set; } = true;
-        public bool IncludeUserId { get; set; } = true;
+        public bool IncludeAccountId { get; set; }
+        public bool IncludeCreatedAt { get; set; }
+        public bool IncludeData { get; set; }
+        public bool IncludeEntity { get; set; }
+        public bool IncludeEvent { get; set; }
+        public bool IncludeUserId { get; set; }
 
         public ActivityLogOptions()
+            : this(RequestMode.Default)
+        {
+        }
+
+        public ActivityLogOptions(RequestMode mode)
             : base("activity_log")
         {
+            switch (mode) 
+            {
+                case RequestMode.Minimum:
+                    IncludeAccountId = false;
+                    IncludeCreatedAt = false;
+                    IncludeData = false;
+                    IncludeEntity = false;
+                    IncludeEvent = false;
+                    IncludeUserId = false;
+                    break;
+
+                case RequestMode.Maximum:
+                case RequestMode.MaximumChild:
+                    IncludeAccountId = true;
+                    IncludeCreatedAt = true;
+                    IncludeData = true;
+                    IncludeEntity = true;
+                    IncludeEvent = true;
+                    IncludeUserId = true;
+                    break;
+
+                case RequestMode.Default:
+                default:
+                    IncludeAccountId = false;
+                    IncludeCreatedAt = false;
+                    IncludeData = true;
+                    IncludeEntity = false;
+                    IncludeEvent = true;
+                    IncludeUserId = true;
+                    break;
+            }
         }
 
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)

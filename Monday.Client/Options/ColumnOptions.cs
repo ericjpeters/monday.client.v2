@@ -1,4 +1,6 @@
-﻿namespace Monday.Client.Options
+﻿using Monday.Client.Requests;
+
+namespace Monday.Client.Options
 {
     public interface IColumnOptions : IBaseOptions
     {
@@ -10,14 +12,44 @@
 
     public class ColumnOptions : BaseOptions, IColumnOptions
     {
-        public bool IncludeTitle { get; set; } = true;
-        public bool IncludeType { get; set; } = true;
-        public bool IncludeIsArchived { get; set; } = true;
-        public bool IncludeSettings { get; set; } = true;
+        public bool IncludeTitle { get; set; }
+        public bool IncludeType { get; set; }
+        public bool IncludeIsArchived { get; set; }
+        public bool IncludeSettings { get; set; }
 
         public ColumnOptions()
+            : this(RequestMode.Default)
+        { 
+        }
+
+        public ColumnOptions(RequestMode mode)
             : base("column")
         {
+            switch (mode)
+            {
+                case RequestMode.Minimum:
+                    IncludeTitle = false;
+                    IncludeType = false;
+                    IncludeIsArchived = false;
+                    IncludeSettings = false;
+                    break;
+
+                case RequestMode.Maximum:
+                case RequestMode.MaximumChild:
+                    IncludeTitle = true;
+                    IncludeType = true;
+                    IncludeIsArchived = true;
+                    IncludeSettings = true;
+                    break;
+
+                case RequestMode.Default:
+                default:
+                    IncludeTitle = true;
+                    IncludeType = true;
+                    IncludeIsArchived = true;
+                    IncludeSettings = true;
+                    break;
+            }
         }
 
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)

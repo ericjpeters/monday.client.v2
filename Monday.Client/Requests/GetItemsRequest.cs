@@ -45,6 +45,15 @@ namespace Monday.Client.Requests
         public GetItemsRequest(int boardId)
         {
             BoardId = boardId;
+
+            ItemOptions = new ItemOptions(RequestMode.Default);
+            ItemOptions.BoardOptions.IncludeBoardStateType = false;
+            ItemOptions.BoardOptions.IncludeBoardFolderId = false;
+            ItemOptions.GroupOptions.IncludeColor = false;
+            ItemOptions.IncludeSubscribers = false;
+            ItemOptions.SubscriberOptions = null;
+            ItemOptions.IncludeColumnValues = false;
+            ItemOptions.ColumnValueOptions = null;
         }
 
         public GetItemsRequest(int boardId, RequestMode mode)

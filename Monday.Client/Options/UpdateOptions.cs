@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Monday.Client.Requests;
+using System;
 
 namespace Monday.Client.Options
 {
@@ -32,8 +33,68 @@ namespace Monday.Client.Options
         public ReplyOptions RepliesOptions { get; set; }
 
         public UpdateOptions()
+            : this(RequestMode.Default)
+        { 
+        }
+
+        public UpdateOptions(RequestMode mode)
            : base("update")
         {
+            switch (mode)
+            {
+                case RequestMode.Minimum:
+                    IncludeItemId = false;
+                    IncludeCreatorId = false;
+                    IncludeCreator = false;
+                    IncludeBody = false;
+                    IncludeBodyText = false;
+                    IncludeReplies = false;
+                    IncludeCreatedAt = false;
+                    IncludeUpdatedAt = false;
+                    CreatorOptions = null;
+                    RepliesOptions = null;
+                    break;
+
+                case RequestMode.Maximum:
+                    IncludeItemId = true;
+                    IncludeCreatorId = true;
+                    IncludeCreator = true;
+                    IncludeBody = true;
+                    IncludeBodyText = true;
+                    IncludeReplies = true;
+                    IncludeCreatedAt = true;
+                    IncludeUpdatedAt = true;
+                    CreatorOptions = new CreatorOptions(RequestMode.MaximumChild);
+                    RepliesOptions = new ReplyOptions(RequestMode.MaximumChild);
+                    break;
+
+                case RequestMode.MaximumChild:
+                    IncludeItemId = true;
+                    IncludeCreatorId = true;
+                    IncludeCreator = false;
+                    IncludeBody = true;
+                    IncludeBodyText = true;
+                    IncludeReplies = false;
+                    IncludeCreatedAt = true;
+                    IncludeUpdatedAt = true;
+                    CreatorOptions = null;
+                    RepliesOptions = null;
+                    break;
+
+                case RequestMode.Default:
+                default:
+                    IncludeItemId = false;
+                    IncludeCreatorId = false;
+                    IncludeCreator = false;
+                    IncludeBody = false;
+                    IncludeBodyText = false;
+                    IncludeReplies = false;
+                    IncludeCreatedAt = false;
+                    IncludeUpdatedAt = false;
+                    CreatorOptions = null;
+                    RepliesOptions = null;
+                    break;
+            }
         }
 
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
@@ -48,8 +109,8 @@ namespace Monday.Client.Options
             var createdAt = GetField(IncludeCreatedAt, "created_at");
             var updatedAt = GetField(IncludeUpdatedAt, "updated_at");
 
-            var creator = GetField(IncludeCreator, "creator");
-            var replies = GetField(IncludeReplies, "replies");
+            var creator = GetField(IncludeCreator, CreatorOptions?.Build(OptionBuilderMode.Single));
+            var replies = GetField(IncludeReplies, RepliesOptions?.Build(OptionBuilderMode.Multiple));
 
             return $@"
 {modelName}{modelAttributes} {{

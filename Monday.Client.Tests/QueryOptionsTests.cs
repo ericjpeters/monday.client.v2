@@ -380,7 +380,7 @@ namespace Monday.Client.Tests
             await _mondayClient.GetItem(new GetItemRequest(1234, RequestMode.Maximum));
 
             DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
-                "query request($id:Int) { items(ids:[$id]) { id name creator_id created_at updated_at creator { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } board { id name description board_kind state board_folder_id permissions } group { id title color archived deleted } column_values { id title value type text additional_info } subscribers { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } } }");
+                "query request($id:Int) { items(ids:[$id]) { id name creator_id created_at updated_at creator { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } board { id name description board_kind state board_folder_id permissions communication pos updated_at workspace_id } group { id title color archived deleted } column_values { id title value type text additional_info } subscribers { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } } }");
         }
 
         [TestMethod]
@@ -389,7 +389,7 @@ namespace Monday.Client.Tests
             await _mondayClient.GetItems(new GetItemsRequest(1234, RequestMode.Maximum));
 
             DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
-                "query request($id:Int) { boards(ids:[$id]) { items(limit:100000) { id name creator_id created_at updated_at creator { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } board { id name description board_kind state board_folder_id permissions } group { id title color archived deleted } column_values { id title value type text additional_info } subscribers { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } } } }");
+                "query request($id:Int) { boards(ids:[$id]) { items(limit:100000) { id name creator_id created_at updated_at creator { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } board { id name description board_kind state board_folder_id permissions communication pos updated_at workspace_id } group { id title color archived deleted } column_values { id title value type text additional_info } subscribers { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } } } }");
         }
 
         [TestMethod]
@@ -416,7 +416,7 @@ namespace Monday.Client.Tests
             await _mondayClient.GetBoards(new GetBoardsRequest(RequestMode.Maximum));
 
             DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
-                "query { boards(limit:100000) { id name description board_kind state board_folder_id permissions columns { id title type archived settings_str } } }");
+                "query { boards(limit:100000) { id name description board_kind state board_folder_id columns { id title type archived settings_str } permissions activity_logs { id account_id created_at data entity event user_id } communication groups { id title color archived deleted } items { id name creator_id created_at updated_at } owner { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } pos subscribers { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } tags { id name color } top_group { id title color archived deleted } updated_at updates { id item_id creator_id body text_body created_at updated_at } views { id name settings_str type } workspace { id } workspace_id } }");
         }
 
         [TestMethod]
@@ -425,7 +425,7 @@ namespace Monday.Client.Tests
             await _mondayClient.GetBoard(new GetBoardRequest(1234, RequestMode.Maximum));
 
             DumbCheckQueryEquivalence(_latestGraphQlRequest.Query,
-                "query request($id:Int) { boards(ids:[$id]) { id name description board_kind state board_folder_id permissions columns { id title type archived settings_str } } }");
+                "query request($id:Int) { boards(ids:[$id]) { id name description board_kind state board_folder_id columns { id title type archived settings_str } permissions activity_logs { id account_id created_at data entity event user_id } communication groups { id title color archived deleted } items { id name creator_id created_at updated_at } owner { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } pos subscribers { id name email url photo_original title birthday country_code location time_zone_identifier phone mobile_phone is_guest is_pending enabled created_at } tags { id name color } top_group { id title color archived deleted } updated_at updates { id item_id creator_id body text_body created_at updated_at } views { id name settings_str type } workspace { id } workspace_id } }");
         }
 
         [TestMethod]

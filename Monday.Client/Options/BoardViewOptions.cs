@@ -1,4 +1,6 @@
-﻿namespace Monday.Client.Options
+﻿using Monday.Client.Requests;
+
+namespace Monday.Client.Options
 {
     public interface IBoardViewOptions : IBaseOptions
     {
@@ -9,13 +11,41 @@
 
     public class BoardViewOptions : BaseOptions, IBoardViewOptions
     {
-        public bool IncludeName { get; set; } = true;
-        public bool IncludeSettings { get; set; } = true;
-        public bool IncludeType { get; set; } = false;
+        public bool IncludeName { get; set; }
+        public bool IncludeSettings { get; set; }
+        public bool IncludeType { get; set; }
 
         public BoardViewOptions()
+            : this(RequestMode.Default)
+        {
+        }
+
+        public BoardViewOptions(RequestMode mode)
             : base("view")
         {
+            switch (mode)
+            {
+                case RequestMode.Minimum:
+                    IncludeName = false;
+                    IncludeSettings = false;
+                    IncludeType = false;
+                    break;
+
+                case RequestMode.Maximum:
+                case RequestMode.MaximumChild:
+                    IncludeName = true;
+                    IncludeSettings = true;
+                    IncludeType = true;
+                    break;
+
+                case RequestMode.Default:
+                default:
+                    IncludeName = true;
+                    IncludeSettings = true;
+                    IncludeType = false;
+                    break;
+
+            }
         }
 
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)

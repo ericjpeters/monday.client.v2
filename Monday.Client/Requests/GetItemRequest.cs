@@ -29,6 +29,8 @@ namespace Monday.Client.Requests
         public GetItemRequest(int itemId)
         {
             ItemId = itemId;
+
+            ItemOptions = new ItemOptions(RequestMode.Default);
         }
 
         public GetItemRequest(int itemId, RequestMode mode)

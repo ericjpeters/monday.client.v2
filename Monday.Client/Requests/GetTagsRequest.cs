@@ -27,40 +27,16 @@ namespace Monday.Client.Requests
         public ITagOptions TagOptions { get; set; } 
 
         public GetTagsRequest(int boardId)
-            : this(boardId, RequestMode.Default)
-        {
-        }
-
-        public GetTagsRequest(int boardId, RequestMode mode)
         {
             BoardId = boardId;
 
-            switch (mode)
-            {
-                case RequestMode.Minimum:
-                    TagOptions = new TagOptions
-                    {
-                        IncludeName = false,
-                        IncludeColor = false
-                    };
-                    break;
+            TagOptions = new TagOptions(RequestMode.Default);
+        }
 
-                case RequestMode.Maximum:
-                    TagOptions = new TagOptions
-                    {
-                        IncludeName = true,
-                        IncludeColor = true
-                    };
-                    break;
-
-                default:
-                    TagOptions = new TagOptions
-                    {
-                        IncludeName = true,
-                        IncludeColor = true
-                    };
-                    break;
-            }
+        public GetTagsRequest(int boardId, RequestMode mode)
+            : this(boardId)
+        {
+            TagOptions = new TagOptions(mode);
         }
     }
 }

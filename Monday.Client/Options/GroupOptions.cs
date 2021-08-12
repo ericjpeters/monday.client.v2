@@ -1,4 +1,6 @@
-﻿namespace Monday.Client.Options
+﻿using Monday.Client.Requests;
+
+namespace Monday.Client.Options
 {
     public interface IGroupOptions : IBaseOptions
     {
@@ -10,14 +12,43 @@
 
     public class GroupOptions : BaseOptions, IGroupOptions
     {
-        public bool IncludeTitle { get; set; } = true;
-        public bool IncludeColor { get; set; } = false;
-        public bool IncludeIsArchived { get; set; } = true;
-        public bool IncludeIsDeleted { get; set; } = true;
+        public bool IncludeTitle { get; set; }
+        public bool IncludeColor { get; set; }
+        public bool IncludeIsArchived { get; set; }
+        public bool IncludeIsDeleted { get; set; }
 
         public GroupOptions()
+            : this(RequestMode.Default)
+        {
+        }
+
+        public GroupOptions(RequestMode mode)
            : base("group")
         {
+            switch (mode)
+            {
+                case RequestMode.Minimum:
+                    IncludeTitle = false;
+                    IncludeColor = false;
+                    IncludeIsArchived = false;
+                    IncludeIsDeleted = false;
+                    break;
+
+                case RequestMode.Maximum:
+                case RequestMode.MaximumChild:
+                    IncludeTitle = true;
+                    IncludeColor = true;
+                    IncludeIsArchived = true;
+                    IncludeIsDeleted = true;
+                    break;
+
+                default:
+                    IncludeTitle = true;
+                    IncludeColor = true;
+                    IncludeIsArchived = true;
+                    IncludeIsDeleted = true;
+                    break;
+            }
         }
 
         internal override string Build(OptionBuilderMode mode, (string key, object val)[] attrs = null)
@@ -40,6 +71,12 @@
     public class TopGroupOptions : GroupOptions
     {
         public TopGroupOptions()
+            : this(RequestMode.Default)
+        {
+        }
+
+        public TopGroupOptions(RequestMode mode)
+            : base(mode)
         {
             NameSingular = "top_group";
             NamePlural = "top_group";
